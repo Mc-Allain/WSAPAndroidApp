@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen"
+    tools:context=".AdminExpoDetailsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgPoster"
+                android:layout_width="match_parent"
+                android:layout_height="236dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_wsap" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-16dp"
+                android:background="@drawable/bg_corner_top"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgPoster">
+
+                <ImageView
+                    android:id="@+id/imgMove"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:adjustViewBounds="true"
+                    android:padding="4dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvSchedule"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvExpo"
+                    app:srcCompat="@drawable/ic_baseline_drive_file_move_24"
+                    app:tint="@color/primary" />
+
+                <ImageView
+                    android:id="@+id/imgUpdateExpo"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:adjustViewBounds="true"
+                    android:padding="4dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvSchedule"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgMove"
+                    app:layout_constraintTop_toBottomOf="@+id/tvExpo"
+                    app:srcCompat="@drawable/ic_baseline_edit_24"
+                    app:tint="@color/primary" />
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    style="@style/common_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/lorem_ipsum"
+                    android:textAlignment="textStart"
+                    app:layout_constraintEnd_toEndOf="@+id/tvDivision"
+                    app:layout_constraintStart_toStartOf="@+id/tvSchedule"
+                    app:layout_constraintTop_toBottomOf="@+id/tvSchedule" />
+
+                <TextView
+                    android:id="@+id/tvSchedule"
+                    style="@style/information_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/expo_schedule_value"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/primary"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="@+id/tvExpo"
+                    app:layout_constraintEnd_toStartOf="@+id/imgUpdateExpo"
+                    app:layout_constraintStart_toStartOf="@+id/tvExpo"
+                    app:layout_constraintTop_toBottomOf="@+id/tvExpo" />
+
+                <TextView
+                    android:id="@+id/tvExpo"
+                    style="@style/activity_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/upcoming_expo_item_dummy"
+                    android:textAlignment="textStart"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/tvDivision"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvDivision"
+                    style="@style/activity_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:text="@string/luzon"
+                    android:textColor="?attr/theme_text_color_variant_3"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvExpo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvExpo" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/exhibitorsLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:padding="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDescription">
+
+                    <ImageView
+                        android:id="@+id/imgUpdateExhibitors"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:padding="4dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvExhibitors"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tvExhibitors"
+                        app:srcCompat="@drawable/ic_baseline_edit_24"
+                        app:tint="@color/primary" />
+
+                    <TextView
+                        android:id="@+id/tvExhibitors"
+                        style="@style/information_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/exhibitors"
+                        android:textColor="@color/primary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvExhibitors" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

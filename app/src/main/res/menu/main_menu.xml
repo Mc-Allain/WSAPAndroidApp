@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/exposFragment"
+        android:icon="@drawable/ic_expos"
+        android:title="@string/expos" />
+
+    <item
+        android:id="@+id/suppliersFragment"
+        android:icon="@drawable/ic_suppliers"
+        android:title="@string/suppliers" />
+
+    <item
+        android:id="@+id/plannerFragment"
+        android:icon="@drawable/ic_event_note_gray"
+        android:title="@string/planner" />
+
+    <item
+        android:id="@+id/moreFragment"
+        android:icon="@drawable/ic_more_gray"
+        android:title="@string/more" />
+
+</menu>

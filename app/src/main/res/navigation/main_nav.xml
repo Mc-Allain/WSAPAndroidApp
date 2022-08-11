@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.wsapandroidapp.Fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/exposFragment"
+        android:name="com.example.wsapandroidapp.Fragments.ExposFragment"
+        android:label="fragment_expos"
+        tools:layout="@layout/fragment_expos" />
+    <fragment
+        android:id="@+id/suppliersFragment"
+        android:name="com.example.wsapandroidapp.Fragments.SuppliersFragment"
+        android:label="fragment_suppliers"
+        tools:layout="@layout/fragment_suppliers" />
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="com.example.wsapandroidapp.Fragments.MoreFragment"
+        android:label="fragment_more"
+        tools:layout="@layout/fragment_more" />
+    <fragment
+        android:id="@+id/plannerFragment"
+        android:name="com.example.wsapandroidapp.Fragments.PlannerFragment"
+        android:label="fragment_planner"
+        tools:layout="@layout/fragment_planner" />
+</navigation>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="user_defined_style">
+        <attr name="theme_background_color" format="color" />
+        <attr name="theme_background_color_variant" format="color" />
+        <attr name="theme_background_color_accent" format="color" />
+        <attr name="theme_background_color_accent_variant" format="color" />
+
+        <attr name="theme_header_background_color" format="color" />
+        <attr name="theme_footer_background_color" format="color" />
+
+        <attr name="theme_text_color" format="color" />
+        <attr name="theme_text_color_variant" format="color" />
+        <attr name="theme_text_color_variant_1" format="color" />
+        <attr name="theme_text_color_variant_2" format="color" />
+        <attr name="theme_text_color_variant_3" format="color" />
+        <attr name="theme_text_color_variant_4" format="color" />
+
+    </declare-styleable>
+</resources>

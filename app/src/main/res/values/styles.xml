@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting" parent="@style/Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation duration. -->
+        <item name="windowSplashScreenBackground">@color/splash_screen_background</item>
+
+        <!-- Use windowSplashScreenAnimatedIcon to add either a drawable or an
+             animated drawable. One of these is required. -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <!-- Required for animated icons -->
+        <item name="windowSplashScreenAnimationDuration">200</item>
+
+        <!-- Set the theme of the Activity that directly follows your splash screen. -->
+            <!-- Required -->
+            <item name="postSplashScreenTheme">@style/Theme.WSAPAndroidApp</item>
+        </style>
+
+    <style name="libre_text">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="libre_gray_text" parent="libre_text">
+        <item name="android:textColor">?attr/theme_text_color_variant_2</item>
+    </style>
+
+    <style name="libre_primary_text" parent="libre_text">
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="libre_secondary_text" parent="libre_text">
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="splash_screen_text">
+        <item name="android:fontFamily">@font/pt_serif</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:text">@string/wsap</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="activity_title">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="information_title" parent="activity_title">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="dialog_title" parent="activity_title">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="common_text">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:text">@string/welcome_caption</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="common_text_variant_1" parent="common_text">
+        <item name="android:textColor">?attr/theme_text_color_variant_1</item>
+    </style>
+
+    <style name="common_text_variant_2" parent="common_text">
+        <item name="android:textColor">?attr/theme_text_color_variant_2</item>
+    </style>
+
+    <style name="common_text_variant_3" parent="common_text">
+        <item name="android:textColor">?attr/theme_text_color_variant_3</item>
+    </style>
+
+    <style name="common_text_variant_4" parent="common_text">
+        <item name="android:textColor">?attr/theme_text_color_variant_4</item>
+    </style>
+
+    <style name="input_label">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="input_field">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/primary_input_bg</item>
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="input_field_hint" parent="input_field">
+        <item name="android:textColorHint">@color/primary</item>
+    </style>
+
+    <style name="textview_field">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
+    <style name="textview_field_hint" parent="textview_field">
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="error_text">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="template_button">
+        <item name="android:fontFamily">@font/source_serif_pro_bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">3dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="primary_button" parent="template_button">
+        <item name="android:backgroundTint">@color/primary</item>
+        <item name="rippleColor">@color/secondary</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="opposite_button" parent="template_button">
+        <item name="android:backgroundTint">?attr/theme_background_color_variant</item>
+        <item name="rippleColor">?attr/theme_background_color_accent</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="template_small_text_button">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">3dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="primary_small_text_button" parent="template_small_text_button">
+        <item name="android:backgroundTint">@color/primary</item>
+        <item name="rippleColor">@color/secondary</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="opposite_small_text_button" parent="template_small_text_button">
+        <item name="android:backgroundTint">?attr/theme_background_color_variant</item>
+        <item name="rippleColor">?attr/theme_background_color_accent</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="template_small_button">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">3dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="primary_small_button" parent="template_small_button">
+        <item name="android:backgroundTint">@color/primary</item>
+        <item name="rippleColor">@color/secondary</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="opposite_small_button" parent="template_small_button">
+        <item name="android:backgroundTint">?attr/theme_background_color_variant</item>
+        <item name="rippleColor">?attr/theme_background_color_accent</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="pager_style" parent="common_text_variant_4">
+        <item name="android:background">@drawable/bg_corner</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
+    <style name="bg_black_50_title" parent="pager_style">
+        <item name="android:background">@drawable/bg_black_50</item>
+    </style>
+
+    <style name="dialog_card">
+        <item name="cardCornerRadius">16dp</item>
+    </style>
+
+    <style name="message_style">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="message_style_primary" parent="message_style">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="sign_in_button_card">
+        <item name="cardElevation">3dp</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="sign_in_button">
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingLeft">9dp</item>
+        <item name="android:paddingRight">9dp</item>
+    </style>
+
+    <style name="google_sign_in_button" parent="sign_in_button">
+        <item name="android:background">@drawable/bg_google_button_ripple</item>
+    </style>
+
+    <style name="facebook_sign_in_button" parent="sign_in_button">
+        <item name="android:background">@drawable/bg_facebook_button_ripple</item>
+    </style>
+
+    <style name="default_sign_in_button" parent="sign_in_button">
+        <item name="android:background">@drawable/bg_email_address_button_ripple</item>
+    </style>
+
+    <style name="sign_in_text_button">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="google_sign_in_text_button" parent="sign_in_text_button">
+        <item name="android:text">@string/google_sign_in</item>
+        <item name="android:textColor">@color/text_on_light</item>
+    </style>
+
+    <style name="facebook_sign_in_text_button" parent="sign_in_text_button">
+        <item name="android:text">@string/facebook_sign_in</item>
+        <item name="android:textColor">@color/text_on_dark</item>
+    </style>
+
+    <style name="default_sign_in_text_button" parent="sign_in_text_button">
+        <item name="android:text">@string/default_sign_in</item>
+        <item name="android:textColor">@color/text_on_dark</item>
+    </style>
+
+    <style name="authentication_prompt_style">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="sign_up_prompt_text" parent="authentication_prompt_style">
+        <item name="android:text">@string/sign_up_prompt</item>
+        <item name="android:textColor">?attr/theme_text_color_variant_1</item>
+    </style>
+
+    <style name="sign_up_text" parent="authentication_prompt_style">
+        <item name="android:text">@string/sign_up_underlined</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="sign_in_prompt_text" parent="authentication_prompt_style">
+        <item name="android:text">@string/sign_in_prompt</item>
+        <item name="android:textColor">?attr/theme_text_color_variant_1</item>
+    </style>
+
+    <style name="sign_in_text" parent="authentication_prompt_style">
+        <item name="android:text">@string/sign_in_underlined</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="skip_button">
+        <item name="android:fontFamily">@font/source_serif_pro</item>
+        <item name="android:backgroundTint">?attr/theme_background_color_variant</item>
+        <item name="rippleColor">?attr/theme_background_color_accent</item>
+        <item name="android:text">@string/skip</item>
+        <item name="android:textColor">?attr/theme_text_color_variant_2</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">3dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="item_card">
+        <item name="cardElevation">3dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="flat_item_card">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">16dp</item>
+    </style>
+
+    <style name="flat_item_card_md">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <style name="home_item_text_category">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textColor">@color/text_on_dark_accent_1</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="item_text_title" parent="home_item_text_category">
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="item_count" parent="item_text_title">
+        <item name="android:textSize">48sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="layout_border_corner">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
+    <style name="common_card_title">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/theme_text_color</item>
+    </style>
+
+    <style name="description_small_text" parent="common_text">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="expo_post_schedule">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="more_info">
+        <item name="android:fontFamily">@font/libre_baskerville</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="more_info_blue" parent="more_info">
+        <item name="android:textColor">@color/blue_l1</item>
+    </style>
+
+</resources>

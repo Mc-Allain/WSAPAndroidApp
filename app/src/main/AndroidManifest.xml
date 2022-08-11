@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.wsapandroidapp">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WSAPAndroidApp"
+        tools:targetApi="31">
+        <activity
+            android:name=".SuppliersChecklistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ImageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExpoDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SchedulesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeddingTipsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExpoDivisionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExhibitorDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExhibitorCategoriesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExposActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExhibitorDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExhibitorsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminSupplierCategoriesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminSupplierDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminTopicsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminUsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminSuppliersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExposActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TriviasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DosAndDontsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TutorialsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WebsitesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlannerSuppliersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GuestListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EventsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChecklistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeddingTimelineActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BudgetPlanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TopicsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SuppliersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostSignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SupplierDetailsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ExpoDetailsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".SplashScreenActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App.Starting"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>

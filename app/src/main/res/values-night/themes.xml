@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.WSAPAndroidApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_text</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_text</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >@color/primary</item>
+
+        <!-- Customize your theme here. -->
+        <item name="theme_background_color">@color/black</item>
+        <item name="theme_background_color_variant">@color/opposite</item>
+        <item name="theme_background_color_accent">@color/opposite_ripple</item>
+        <item name="theme_background_color_accent_variant">@color/opposite</item>
+        <item name="theme_header_background_color">@color/opposite</item>
+        <item name="theme_footer_background_color">@color/opposite_ripple</item>
+
+        <item name="theme_text_color">@color/text_on_dark</item>
+        <item name="theme_text_color_variant">@color/text_on_dark_accent</item>
+    </style>
+</resources>

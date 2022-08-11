@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="blue">#1650CE</color>
+    <color name="blue_l1">#4B48FD</color>
+    <color name="red">#FF0000</color>
+    <color name="red_d1">#AA0000</color>
+    <color name="green">#2EB330</color>
+    <color name="yellow">#f1ce36</color>
+    <color name="black_50">#88000000</color>
+    <color name="black_85">#DD000000</color>
+
+    <color name="splash_screen_background">#FEFEFD</color>
+    <color name="primary">#CC9933</color>
+    <color name="primary_75">#BBCC9933</color>
+    <color name="secondary">#8E6B24</color>
+    <color name="primary_text">#765126</color>
+    <color name="secondary_text">#B88A2F</color>
+
+    <color name="text_on_light">#151515</color>
+    <color name="text_on_light_accent">#0C0C0C</color>
+    <color name="text_on_light_accent_1">#5E5E5E</color>
+    <color name="text_on_light_accent_2">#7C7C7C</color>
+    <color name="text_on_light_accent_3">#8C8C8C</color>
+    <color name="text_on_light_accent_4">#909090</color>
+
+    <color name="text_on_dark">#FFFFFF</color>
+    <color name="text_on_dark_accent">#F8F8F8</color>
+    <color name="text_on_dark_accent_1">#F3F3F3</color>
+
+    <color name="gray">#8C8C8C</color>
+    <color name="darker_gray">@android:color/darker_gray</color>
+
+    <color name="opposite">#F9F9F9</color>
+    <color name="opposite_ripple">#C8C8C8</color>
+
+    <color name="google">#F8F8F8</color>
+    <color name="google_ripple">#C8C8C8</color>
+
+    <color name="facebook">#4F86EC</color>
+    <color name="facebook_ripple">#35599A</color>
+
+    <color name="email_address">#CC9933</color>
+    <color name="email_address_ripple">#8E6B24</color>
+
+</resources>

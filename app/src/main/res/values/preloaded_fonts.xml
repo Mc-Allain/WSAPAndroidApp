@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/caladea</item>
+        <item>@font/libre_baskerville</item>
+        <item>@font/pt_serif</item>
+        <item>@font/source_serif_pro</item>
+        <item>@font/source_serif_pro_bold</item>
+    </array>
+</resources>

@@ -1,0 +1,305 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">WSAP</string>
+    <string name="wsap">Wedding Suppliers Association of the Philippines</string>
+
+    <string name="firebase_RTDB_url">https://wsap-mobile-app-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</string>
+
+    <string name="new_version_title">New version detected</string>
+    <string name="new_version_prompt">Please update the application to access the new features.</string>
+    <string name="current_version_italicized"><i>Current Version v%.2f</i></string>
+    <string name="latest_version_italicized"><i>Latest Version v%.2f</i></string>
+
+    <string name="live">Live</string>
+    <string name="app_status_title">Under %s</string>
+    <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
+
+    <string name="fd_on_cancelled">Failed to get %s.</string>
+
+    <string name="loading">Loading, please wait…</string>
+    <string name="sign_up_loading">Signing up, please wait…</string>
+    <string name="message_prompt">This is a message prompt.</string>
+    <string name="confirmation_prompt">Do you want to %s?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="submit">Submit</string>
+    <string name="exit">Exit</string>
+    <string name="save">Save</string>
+
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+
+    <string name="welcome">Welcome!</string>
+    <string name="welcome_caption">Join us to learn everything you need to know in wedding industry. Build connections and work with the professionals.</string>
+
+    <string name="default_sign_in">Continue with Email Address</string>
+    <string name="google_sign_in">Sign in with Google</string>
+    <string name="facebook_sign_in">Sign in with Facebook</string>
+    <string name="sign_up_prompt">Don\'t have an account?</string>
+    <string name="sign_up_underlined"><u>Sign up</u></string>
+    <string name="skip">Skip</string>
+    <string name="anonymous_sign_in_error">Failed to sign in anonymously.</string>
+    <string name="sign_in_prompt">Already have an account?</string>
+    <string name="sign_in_underlined"><u>Sign in</u></string>
+
+    <string name="sign_in">Sign in</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="forgot_password_underlined"><u>Forgot password?</u></string>
+
+    <string name="create_account">Create Account</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign up</string>
+
+    <string name="required_input_error">%s is required.</string>
+    <string name="invalid_error">Invalid %s</string>
+    <string name="length_error">%s must be at least %d characters.</string>
+    <string name="match_error">%s does not match.</string>
+
+    <string name="sign_up_success">Successfully registered an account.</string>
+    <string name="sign_up_error">Failed to register an account, please try again later.</string>
+
+    <string name="registration_successful">Registration Successful!</string>
+    <string name="email_address_verification">Email Address Verification</string>
+    <string name="email_verification_link_prompt">Email verification link has been sent to\n%s</string>
+    <string name="email_verification_link_help">Please also check your spam category.</string>
+    <string name="email_verification_link_countdown"><b>%d secs</b> left for the resend button.</string>
+    <string name="resend_email_verification_link">Resend Email Verification Link</string>
+    <string name="update_email_address">Update Email Address</string>
+    <string name="update_email_address_prompt">Please input your new Email Address.</string>
+    <string name="same_email_address_error">The new email address should not be the same as the current email address.</string>
+    <string name="sign_out">Sign out</string>
+    <string name="email_verification_link_failed">Failed to send the email verification link.</string>
+
+    <string name="home">Home</string>
+    <string name="expos">Expos</string>
+    <string name="suppliers">Suppliers</string>
+    <string name="planner">Planner</string>
+    <string name="topics">Topics</string>
+    <string name="more">More</string>
+
+    <string name="upcoming_expos">Upcoming Expos</string>
+    <string name="upcoming_expo_item_dummy">Tarlac Wedding Expo 2022</string>
+
+    <string name="featured_topic">Featured Topic</string>
+    <string name="featured_topic_item_dummy">Fashion Week 2022</string>
+
+    <string name="featured_supplier">Featured Supplier</string>
+    <string name="featured_supplier_item_dummy">Events Management</string>
+
+    <string name="featured_trivia">Featured Trivia</string>
+    <string name="featured_trivia_item_dummy">Did you know?</string>
+
+    <string name="view_all">View All</string>
+
+    <string name="pager_text">%d out of %d</string>
+
+    <string name="select_expo_status">Select Expo Status</string>
+    <string name="all">All</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="past">Past</string>
+    <string name="select">Select</string>
+
+    <string name="no_record">No %s</string>
+
+    <string name="expo_post_title">Tarlac Wedding Expo 2022</string>
+    <string name="expo_post_schedule">%s\n<b>%d-%d</b>\n%d</string>
+
+    <string name="more_info_underlined"><u>More info</u></string>
+
+    <string name="expo_schedule_value">July 29, 2022 - July 31, 2022</string>
+    <string name="expo_schedule">%s - %s</string>
+
+    <string name="division">Division</string>
+    <string name="divisions">Divisions</string>
+    <string name="luzon">Luzon</string>
+    <string name="visayas">Visayas</string>
+    <string name="mindanano">Mindanao</string>
+
+    <string name="exhibitor_list_caption">Check out our list of exhibitors.</string>
+
+    <string name="exhibitor_categories">Exhibitor Categories</string>
+
+    <string name="expo_url">https://philippineweddingsuppliers.com/wedding-expo</string>
+
+    <string name="suppliers_members">Suppliers/Members</string>
+    <string name="supplier_categories">Supplier Categories</string>
+
+    <string name="supplier_item_dummy">AARON VICTORIA | Hosting and Events</string>
+    <string name="supplier_chapter">Central Luzon</string>
+
+    <string name="select_supplier_category">Select Supplier Category</string>
+    <string name="studio">Studio</string>
+    <string name="events">Events</string>
+
+    <string name="supplier_information">Supplier Information</string>
+    <string name="exhibitor_information">Exhibitor Information</string>
+    <string name="chapter">Chapter</string>
+    <string name="supplier_category">Supplier Category</string>
+
+    <string name="contact_information">Contact Information</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="location_address">Location Address</string>
+
+    <string name="social">Social</string>
+    <string name="social_media">Social Media</string>
+    <string name="facebook">Facebook</string>
+    <string name="instagram">Instagram</string>
+    <string name="twitter">Twitter</string>
+    <string name="youtube">YouTube</string>
+    <string name="website">Website</string>
+
+    <string name="description">Description</string>
+
+    <string name="fb_link">https://www.facebook.com/philippineweddingsuppliers.org</string>
+    <string name="twitter_link">https://mobile.twitter.com/wsapofficial</string>
+    <string name="instagram_link">https://www.instagram.com/philippineweddingsuppliers/</string>
+    <string name="youtube_link">https://www.youtube.com/channel/UCiRK5ZVSmOUfFilPskSQQ-Q</string>
+    <string name="wsap_members_directory_url">https://philippineweddingsuppliers.com/members-directories/</string>
+    <string name="expo_exhibitor_url">https://philippineweddingsuppliers.com/wedding-expo-exhibitor/</string>
+
+    <string name="view_at_wsap">View More at WSAP Website</string>
+
+    <string name="non_anonymous_sign_in_prompt">You must sign in as non-anonymous user to access this feature. Do you want to sign out?</string>
+    <string name="non_admin_dashboard_access">You must be an admin to access this feature.</string>
+
+    <string name="wedding_tips">Wedding Tips</string>
+    <string name="budget_plan">Budget Plan</string>
+    <string name="wedding_timeline">Wedding Timeline Checklist</string>
+    <string name="suppliers_checklist">Suppliers Checklist</string>
+    <string name="checklist">Checklist</string>
+    <string name="appointments">Appointments</string>
+    <string name="schedules">Schedules</string>
+    <string name="guests">Guests</string>
+    <string name="guest_list">Guest List</string>
+    <string name="supplier_list">Supplier List</string>
+
+    <string name="topic_categories">Topic Categories</string>
+    <string name="tutorials">Tutorials</string>
+    <string name="dos_and_donts">Do\'s and Don\'ts</string>
+    <string name="trivias">Trivias</string>
+    <string name="posts">Posts</string>
+
+    <string name="profile">Profile</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="about_us">About us</string>
+    <string name="the_founder">The Founder</string>
+    <string name="contact_us">Contact us</string>
+    <string name="faq">FAQs</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="websites">Websites</string>
+
+    <string name="about_us_url">https://philippineweddingsuppliers.com/about-us/</string>
+    <string name="the_founder_url">https://philippineweddingsuppliers.com/the-founder/</string>
+    <string name="contact_us_url">https://philippineweddingsuppliers.com/contact-us/</string>
+    <string name="faq_url">https://philippineweddingsuppliers.com/frequently-asked-questions/</string>
+    <string name="privacy_policy_url">https://philippineweddingsuppliers.com/privacy-policy/</string>
+
+    <string name="users">Users</string>
+    <string name="exhibitors">Exhibitors</string>
+    <string name="count_value">0</string>
+
+    <string name="add_record">Add %s</string>
+    <string name="update_record">Update %s</string>
+    <string name="fill_out_prompt">Please fill-out the form.</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="category_label">Category Label</string>
+
+    <string name="supplier_label">Supplier Label</string>
+    <string name="select_chapter">Select Chapter</string>
+    <string name="chapters">Chapters</string>
+
+    <string name="exhibitor_label">Exhibitor Label</string>
+
+    <string name="move_category">Move Category</string>
+    <string name="select_category">Select Category</string>
+
+    <string name="add_record_success_msg">Successfully added %s.</string>
+    <string name="update_record_success_msg">Successfully updated %s.</string>
+    <string name="delete_record_success_msg">Successfully deleted %s.</string>
+    <string name="delete_record_failed_msg">Failed to delete %s. %s.</string>
+
+    <string name="change_role">Change Role</string>
+    <string name="select_role">Select Role</string>
+    <string name="all_users">All Users</string>
+    <string name="non_admin">Non-Admin</string>
+    <string name="admin">Admin</string>
+    <string name="admin_head">Admin Head</string>
+    <string name="developer">Developer</string>
+    <string name="lead_developer">Lead Developer</string>
+
+    <string name="change_role_error">Role Assignment must not be equal or greater than your current Role.</string>
+
+    <string name="display_name">Display Name</string>
+    <string name="role">Role</string>
+
+    <string name="expo_title">Expo Title</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+
+    <string name="select_division">Select Division</string>
+
+    <string name="select_exhibitors">Select Exhibitors</string>
+    <string name="all_exhibitors">All Exhibitors</string>
+    <string name="unselected_exhibitors">Unselected Exhibitors</string>
+    <string name="selected_exhibitors">Selected Exhibitors</string>
+
+    <string name="target_wedding_date">Target Wedding Date</string>
+    <string name="target_wedding_date_dummy">January 01, 2023</string>
+    <string name="wedding_date_time_left">%d Days, %d Hrs, %d Mins &amp; %d Secs Left</string>
+    <string name="wedding_day">Wedding Day!</string>
+    <string name="congratulations">Congratulations!</string>
+
+    <string name="supplier_checklist_category_dummy">Full Planning</string>
+    <string name="supplier_checklist_dummy">Events Planner</string>
+    <string name="company">Company</string>
+    <string name="contact_person">Contact Person</string>
+    <string name="contact_number">Contact Number</string>
+
+    <string name="wedding_timeline_dummy_title">12 Months or more before the wedding</string>
+    <string name="wedding_timeline_completed_task">Completed %d/%d</string>
+    <string name="wedding_timeline_completed_task_dummy" tools:ignore="TypographyFractions">Completed 1/4</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="sign_in_raw_errors">
+        <item>no user record</item>
+        <item>password is invalid</item>
+        <item>network error</item>
+        <item>internal error</item>
+        <item>blocked all requests</item>
+        <item>has been disabled</item>
+    </string-array>
+
+    <string-array name="sign_in_errors">
+        <item>Unregistered account</item>
+        <item>Network error. Please try again later.</item>
+        <item>Internal error. Please try again later.</item>
+        <item>This device has been blocked temporarily. Please try again next time.</item>
+        <item>The account has been deactivated. Please contact the admin to activate it.</item>
+    </string-array>
+
+    <string-array name="sign_up_raw_errors">
+        <item>UserCollision</item>
+        <item>RecentLogin</item>
+    </string-array>
+
+    <string-array name="sign_up_errors">
+        <item>The Email Address is already in use.</item>
+        <item>This operation is sensitive and requires recent authentication. Please sign in again before trying this request.</item>
+    </string-array>
+
+    <string-array name="shared_preferences">
+        <item>authData</item>
+    </string-array>
+
+    <string-array name="auth_data">
+        <item>password</item>
+        <item>resendLinkCountdown</item>
+        <item>isAnonymous</item>
+    </string-array>
+</resources>
