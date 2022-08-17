@@ -39,6 +39,8 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
 
     private int selectedPosition = -1;
 
+    private long duration = 0;
+
     public WeddingTimelineAdapter(Context context, List<UserWeddingTimeline> weddingTimeline) {
         this.weddingTimeline = weddingTimeline;
         this.layoutInflater = LayoutInflater.from(context);
@@ -84,13 +86,22 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
         backgroundLayout1.setBackgroundColor(context.getColor(R.color.white));
         tvTitle.setTextColor(context.getColor(R.color.primary));
         tvStatus.setTextColor(context.getColor(R.color.gray));
+        imgStatus.setImageResource(R.drawable.ic_baseline_watch_later_24);
         imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.gray)));
         imgArrow.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
         imgArrow.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.primary)));
         recyclerView.setVisibility(View.GONE);
 
-        imgStatus.setImageResource(R.drawable.ic_baseline_watch_later_24);
+        if (duration < weddingTimeline1.getDuration()) {
+            backgroundLayout1.setBackgroundColor(context.getColor(R.color.light_gray));
+            tvTitle.setTextColor(context.getColor(R.color.black));
+            imgStatus.setImageResource(R.drawable.ic_baseline_clear_24);
+            imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
+        }
+
         if (completed == total) {
+            backgroundLayout1.setBackgroundColor(context.getColor(R.color.white));
+            tvTitle.setTextColor(context.getColor(R.color.primary));
             imgStatus.setImageResource(R.drawable.ic_baseline_check_circle_24);
             imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.green)));
         }
@@ -108,12 +119,12 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
         tvStatus.setText(context.getString(R.string.wedding_timeline_completed_task, completed, total));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        WeddingTimelineTaskAdapter weddingTimelineTaskAdapter = new WeddingTimelineTaskAdapter(context, userWeddingTimelineTasks);
+        WeddingTimelineTaskAdapter weddingTimelineTaskAdapter = new WeddingTimelineTaskAdapter(context, userWeddingTimelineTasks, duration < weddingTimeline1.getDuration());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(weddingTimelineTaskAdapter);
 
         weddingTimelineTaskAdapter.setAdapterListener(task -> {
-            Map<String, UserWeddingTimelineTask> userWeddingTimelineTasksMap = new HashMap<>();
+            Map<String, UserWeddingTimelineTask> userWeddingTimelineTaskMap = new HashMap<>();
 
             final boolean isCompleted = !task.isCompleted();
 
@@ -122,10 +133,10 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
                     if (userWeddingTimelineTask.getId().equals(task.getId()))
                         userWeddingTimelineTask.setCompleted(true);
 
-                    userWeddingTimelineTasksMap.put(userWeddingTimelineTask.getId(), userWeddingTimelineTask);
+                    userWeddingTimelineTaskMap.put(userWeddingTimelineTask.getId(), userWeddingTimelineTask);
                 }
 
-                weddingTimeline1.setTasks(userWeddingTimelineTasksMap);
+                weddingTimeline1.setTasks(userWeddingTimelineTaskMap);
 
                 if (adapterListener != null) adapterListener.onClick(weddingTimeline1);
 
@@ -139,10 +150,10 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
                         if (userWeddingTimelineTask.getId().equals(task.getId()))
                             userWeddingTimelineTask.setCompleted(false);
 
-                        userWeddingTimelineTasksMap.put(userWeddingTimelineTask.getId(), userWeddingTimelineTask);
+                        userWeddingTimelineTaskMap.put(userWeddingTimelineTask.getId(), userWeddingTimelineTask);
                     }
 
-                    weddingTimeline1.setTasks(userWeddingTimelineTasksMap);
+                    weddingTimeline1.setTasks(userWeddingTimelineTaskMap);
 
                     if (adapterListener != null) adapterListener.onClick(weddingTimeline1);
 
@@ -187,6 +198,10 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
 
             setIsRecyclable(false);
         }
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     private AdapterListener adapterListener;

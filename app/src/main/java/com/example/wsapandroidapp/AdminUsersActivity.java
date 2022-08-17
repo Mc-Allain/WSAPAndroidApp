@@ -3,6 +3,7 @@ package com.example.wsapandroidapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -15,11 +16,14 @@ import android.widget.TextView;
 import com.example.wsapandroidapp.Adapters.UserAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.User;
 import com.example.wsapandroidapp.DataModel.UserRole;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.ChangeUserRoleDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.UserRoleDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,6 +75,11 @@ public class AdminUsersActivity extends AppCompatActivity {
     int selectedRole = 0;
 
     User selectedUser, currentUser;
+
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,16 +148,21 @@ public class AdminUsersActivity extends AppCompatActivity {
             }
         });
 
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         usersQuery = firebaseDatabase.getReference("users").orderByChild("displayName");
+        applicationQuery = firebaseDatabase.getReference("application");
 
         loadingDialog.showDialog();
         isListening = true;
         etSearch.setVisibility(View.INVISIBLE);
         usersQuery.addValueEventListener(getUsers());
+        applicationQuery.addValueEventListener(getApplicationValue());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         userAdapter = new UserAdapter(context, users);
@@ -300,6 +314,62 @@ public class AdminUsersActivity extends AppCompatActivity {
                 });
     }
 
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -315,6 +385,7 @@ public class AdminUsersActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         usersQuery.addListenerForSingleValueEvent(getUsers());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

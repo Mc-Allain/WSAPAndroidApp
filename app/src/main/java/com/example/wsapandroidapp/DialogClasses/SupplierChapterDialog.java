@@ -217,7 +217,7 @@ public class SupplierChapterDialog {
                                 divisions.add(division);
 
                                 Bundle bundle = new Bundle();
-                                bundle.putString("expoVenueImage", division.getImage());
+                                bundle.putString("image", division.getImage());
 
                                 ImageSliderFragment imageSliderFragment = new ImageSliderFragment();
                                 imageSliderFragment.setArguments(bundle);

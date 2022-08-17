@@ -20,6 +20,7 @@ import com.example.wsapandroidapp.DataModel.User;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.ProfileActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.WebsitesActivity;
 import com.example.wsapandroidapp.WelcomeActivity;
@@ -95,6 +96,7 @@ public class MoreFragment extends Fragment {
         userQuery.addValueEventListener(getUser());
 
         moreOptionIconList = Arrays.asList(
+                new MoreOptionIcon(getString(R.string.profile), R.drawable.ic_baseline_person_24, new Intent(context, ProfileActivity.class)),
                 new MoreOptionIcon(getString(R.string.dashboard), R.drawable.ic_baseline_dashboard_24, new Intent(context, DashboardActivity.class)),
                 new MoreOptionIcon(getString(R.string.about_us), R.drawable.ic_outline_info_24, new Intent("android.intent.action.VIEW", Uri.parse(getString(R.string.about_us_url)))),
                 new MoreOptionIcon(getString(R.string.the_founder), R.drawable.ic_baseline_groups_24, new Intent("android.intent.action.VIEW", Uri.parse(getString(R.string.the_founder_url)))),

@@ -40,6 +40,9 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
 
     private int selectedPosition = -1;
 
+    private ImageView imgStatus;
+    private TextView tvStatus;
+
     public SupplierChecklistAdapter(Context context, List list) {
         this.list = list;
         this.layoutInflater = LayoutInflater.from(context);
@@ -70,18 +73,14 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
                     (UserSupplierChecklistCategory) list.get(position);
 
             tvCategory.setText(supplierChecklistCategory.getCategory());
-
-            List<UserSupplierChecklist> userSupplierChecklist =
-                    new ArrayList<>(supplierChecklistCategory.getChecklist().values());
-
-            userSupplierChecklist.sort(Comparator.comparingInt(UserSupplierChecklist::getOrder));
         } else {
             TaskHolder taskHolder = (TaskHolder) holder;
             CardView cardView1 = taskHolder.cardView1;
             ConstraintLayout backgroundLayout1 = taskHolder.backgroundLayout1,
                     constraintLayout = taskHolder.constraintLayout;
             TextView tvTask = taskHolder.tvTask;
-            ImageView imgArrow = taskHolder.imgArrow;
+            ImageView imgArrow = taskHolder.imgArrow,
+                    imgStatus = taskHolder.imgStatus;
             EditText etCompany = taskHolder.etCompany,
                     etContactPerson = taskHolder.etContactPerson,
                     etPhoneNumber = taskHolder.etPhoneNumber,
@@ -89,8 +88,10 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
             TextView tvCompanyError = taskHolder.tvCompanyError,
                     tvContactPersonError = taskHolder.tvContactPersonError,
                     tvPhoneNumberError = taskHolder.tvPhoneNumberError,
-                    tvEmailAddressError = taskHolder.tvEmailAddressError;
-            Button btnSave = taskHolder.btnSave;
+                    tvEmailAddressError = taskHolder.tvEmailAddressError,
+                    tvStatus = taskHolder.tvStatus;
+            Button btnSave = taskHolder.btnSave,
+                    btnReset = taskHolder.btnReset;
 
             List<TextView> errorTextViewList =
                     Arrays.asList(tvCompanyError, tvContactPersonError,
@@ -120,6 +121,11 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
             etContactPerson.setText(contactPerson[0]);
             etPhoneNumber.setText(contactNumber[0]);
             etEmailAddress.setText(emailAddress[0]);
+
+            componentManager.setInputRightDrawable(etCompany, !Credentials.isEmpty(company[0]), Enums.CLEAR_TEXT);
+            componentManager.setInputRightDrawable(etContactPerson, !Credentials.isEmpty(contactPerson[0]), Enums.CLEAR_TEXT);
+            componentManager.setInputRightDrawable(etPhoneNumber, !Credentials.isEmpty(contactNumber[0]), Enums.CLEAR_TEXT);
+            componentManager.setInputRightDrawable(etEmailAddress, !Credentials.isEmpty(emailAddress[0]), Enums.CLEAR_TEXT);
 
             backgroundLayout1.setBackgroundColor(context.getColor(R.color.white));
             tvTask.setTextColor(context.getColor(R.color.primary));
@@ -151,8 +157,13 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
                     company[0] = editable != null ? editable.toString() : "";
 
                     componentManager.setInputRightDrawable(etCompany, !Credentials.isEmpty(company[0]), Enums.CLEAR_TEXT);
-                    checkPersonName(componentManager, company[0], false,
+                    checkLabel(componentManager, company[0], false,
                             context.getString(R.string.company), tvCompanyError, etCompany);
+
+                    if (!supplierChecklist.getCompany().equals(company[0])) {
+                        tvStatus.setText(context.getString(R.string.unsaved_changes));
+                        imgStatus.setImageResource(R.drawable.ic_baseline_error_24);
+                    }
                 }
             });
 
@@ -172,8 +183,13 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
                     contactPerson[0] = editable != null ? editable.toString() : "";
 
                     componentManager.setInputRightDrawable(etContactPerson, !Credentials.isEmpty(contactPerson[0]), Enums.CLEAR_TEXT);
-                    checkPersonName(componentManager, contactPerson[0], false,
+                    checkLabel(componentManager, contactPerson[0], false,
                             context.getString(R.string.contact_person), tvContactPersonError, etContactPerson);
+
+                    if (!supplierChecklist.getContactPerson().equals(contactPerson[0])) {
+                        tvStatus.setText(context.getString(R.string.unsaved_changes));
+                        imgStatus.setImageResource(R.drawable.ic_baseline_error_24);
+                    }
                 }
             });
 
@@ -194,6 +210,16 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
 
                     componentManager.setInputRightDrawable(etPhoneNumber, !Credentials.isEmpty(contactNumber[0]), Enums.CLEAR_TEXT);
                     checkPhoneNumberError(componentManager, tvPhoneNumberError, etPhoneNumber, contactNumber[0]);
+
+                    String contactNumberInit = "";
+                    if (String.valueOf(supplierChecklist.getContactNumber()).length() > 0 &&
+                            supplierChecklist.getContactNumber() != 0)
+                        contactNumberInit = String.valueOf(supplierChecklist.getContactNumber());
+
+                    if (!contactNumberInit.equals(contactNumber[0])) {
+                        tvStatus.setText(context.getString(R.string.unsaved_changes));
+                        imgStatus.setImageResource(R.drawable.ic_baseline_error_24);
+                    }
                 }
             });
 
@@ -214,6 +240,11 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
 
                     componentManager.setInputRightDrawable(etEmailAddress, !Credentials.isEmpty(emailAddress[0]), Enums.CLEAR_TEXT);
                     checkEmailAddressError(componentManager, tvEmailAddressError, etEmailAddress, emailAddress[0]);
+
+                    if (!supplierChecklist.getEmailAddress().equals(emailAddress[0])) {
+                        tvStatus.setText(context.getString(R.string.unsaved_changes));
+                        imgStatus.setImageResource(R.drawable.ic_baseline_error_24);
+                    }
                 }
             });
 
@@ -227,9 +258,9 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
             btnSave.setOnClickListener(view -> {
                 componentManager.hideInputErrors();
 
-                checkPersonName(componentManager, company[0], false,
+                checkLabel(componentManager, company[0], false,
                         context.getString(R.string.company), tvCompanyError, etCompany);
-                checkPersonName(componentManager, contactPerson[0], false,
+                checkLabel(componentManager, contactPerson[0], false,
                         context.getString(R.string.contact_person), tvContactPersonError, etContactPerson);
                 checkPhoneNumberError(componentManager, tvPhoneNumberError, etPhoneNumber, contactNumber[0]);
                 checkEmailAddressError(componentManager, tvEmailAddressError, etEmailAddress, emailAddress[0]);
@@ -244,7 +275,19 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
                     supplierChecklist.setEmailAddress(emailAddress[0]);
 
                     adapterListener.onSubmit(supplierChecklist);
+
+                    this.imgStatus = imgStatus;
+                    this.tvStatus = tvStatus;
                 }
+            });
+
+            btnReset.setOnClickListener(view -> {
+                etCompany.setText(company[0]);
+                etContactPerson.setText(contactPerson[0]);
+                etPhoneNumber.setText(contactNumber[0]);
+                etEmailAddress.setText(emailAddress[0]);
+
+                notifyDataSetChanged();
             });
         }
     }
@@ -278,10 +321,10 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
         CardView cardView1;
         ConstraintLayout backgroundLayout1, constraintLayout;
         TextView tvTask;
-        ImageView imgArrow;
+        ImageView imgArrow, imgStatus;
         EditText etCompany, etContactPerson, etPhoneNumber, etEmailAddress;
-        TextView tvCompanyError, tvContactPersonError, tvPhoneNumberError, tvEmailAddressError;
-        Button btnSave;
+        TextView tvCompanyError, tvContactPersonError, tvPhoneNumberError, tvEmailAddressError, tvStatus;
+        Button btnSave, btnReset;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -302,13 +345,17 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
             tvPhoneNumberError = itemView.findViewById(R.id.tvPhoneNumberError);
             tvEmailAddressError = itemView.findViewById(R.id.tvEmailAddressError);
 
+            imgStatus = itemView.findViewById(R.id.imgStatus);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
+
             btnSave = itemView.findViewById(R.id.btnSave);
+            btnReset = itemView.findViewById(R.id.btnReset);
 
             setIsRecyclable(false);
         }
     }
 
-    private void checkPersonName(ComponentManager componentManager,
+    private void checkLabel(ComponentManager componentManager,
                                  String string, boolean isRequired, String fieldName,
                                  TextView targetTextView, EditText targetEditText) {
         componentManager.hideInputError(targetTextView, targetEditText);
@@ -319,7 +366,7 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
                     targetEditText);
         else if (!Credentials.isEmpty(string) && !Credentials.isValidLength(string, Credentials.REQUIRED_LABEL_LENGTH, 0))
             componentManager.showInputError(targetTextView,
-                    Credentials.getSentenceCase(context.getString(R.string.length_error, fieldName, Credentials.REQUIRED_PERSON_NAME_LENGTH)),
+                    context.getString(R.string.length_error, fieldName, Credentials.REQUIRED_PERSON_NAME_LENGTH),
                     targetEditText);
     }
 
@@ -346,6 +393,11 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
             componentManager.showInputError(tvEmailAddressError,
                     context.getString(R.string.invalid_error, context.getString(R.string.email_address)),
                     etEmailAddress);
+    }
+
+    public void setChangesSaved() {
+        tvStatus.setText(context.getString(R.string.saved));
+        imgStatus.setImageResource(R.drawable.ic_baseline_check_circle_24);
     }
 
     private AdapterListener adapterListener;

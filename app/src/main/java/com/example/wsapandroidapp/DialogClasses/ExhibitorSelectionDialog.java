@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.example.wsapandroidapp.Adapters.ExhibitorSelectionAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
-import com.example.wsapandroidapp.DataModel.ExpoExhibitor2;
+import com.example.wsapandroidapp.DataModel.ExpoExhibitor;
 import com.example.wsapandroidapp.R;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ExhibitorSelectionDialog {
 
     private ExhibitorSelectionAdapter exhibitorSelectionAdapter;
 
-    List<ExpoExhibitor2> expoExhibitors2 = new ArrayList<>(), expoExhibitors2Copy = new ArrayList<>(),
+    List<ExpoExhibitor> expoExhibitors2 = new ArrayList<>(), expoExhibitors2Copy = new ArrayList<>(),
             selectedExpoExhibitors = new ArrayList<>(), selectedExpoExhibitorsCopy = new ArrayList<>();
 
     public ComponentManager componentManager;
@@ -73,21 +73,21 @@ public class ExhibitorSelectionDialog {
         exhibitorSelectionAdapter.setAdapterListener(new ExhibitorSelectionAdapter.AdapterListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onSelect(ExpoExhibitor2 expoExhibitor2) {
-                selectedExpoExhibitors.add(expoExhibitor2);
+            public void onSelect(ExpoExhibitor expoExhibitor) {
+                selectedExpoExhibitors.add(expoExhibitor);
 
                 exhibitorSelectionAdapter.notifyDataSetChanged();
             }
 
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onUnselect(ExpoExhibitor2 expoExhibitor2) {
-                List<ExpoExhibitor2> selectedExpoExhibitors2 = new ArrayList<>(selectedExpoExhibitors);
+            public void onUnselect(ExpoExhibitor expoExhibitor) {
+                List<ExpoExhibitor> selectedExpoExhibitors2 = new ArrayList<>(selectedExpoExhibitors);
 
                 selectedExpoExhibitors.clear();
 
-                for (ExpoExhibitor2 selectedExpoExhibitor : selectedExpoExhibitors2)
-                    if (!expoExhibitor2.getId().equals(selectedExpoExhibitor.getId()))
+                for (ExpoExhibitor selectedExpoExhibitor : selectedExpoExhibitors2)
+                    if (!expoExhibitor.getId().equals(selectedExpoExhibitor.getId()))
                         selectedExpoExhibitors.add(selectedExpoExhibitor);
 
                 exhibitorSelectionAdapter.notifyDataSetChanged();
@@ -147,17 +147,17 @@ public class ExhibitorSelectionDialog {
 
     @SuppressLint("NotifyDataSetChanged")
     private void filterExhibitors() {
-        List<ExpoExhibitor2> expoExhibitors2Temp = new ArrayList<>(expoExhibitors2Copy);
+        List<ExpoExhibitor> expoExhibitors2Temp = new ArrayList<>(expoExhibitors2Copy);
 
         expoExhibitors2.clear();
 
         for (int i = 0; i < expoExhibitors2Temp.size(); i++) {
-            ExpoExhibitor2 expoExhibitor2 = expoExhibitors2Temp.get(i);
+            ExpoExhibitor expoExhibitor = expoExhibitors2Temp.get(i);
 
             boolean isSearched = searchExhibitor.trim().length() == 0 ||
-                    expoExhibitor2.getExhibitor().toLowerCase().contains(searchExhibitor.toLowerCase());
+                    expoExhibitor.getExhibitor().toLowerCase().contains(searchExhibitor.toLowerCase());
 
-            if (isSearched) expoExhibitors2.add(expoExhibitor2);
+            if (isSearched) expoExhibitors2.add(expoExhibitor);
         }
 
         if (expoExhibitors2.size() == 0) {
@@ -172,8 +172,8 @@ public class ExhibitorSelectionDialog {
         exhibitorSelectionAdapter.notifyDataSetChanged();
     }
 
-    public void setExhibitors(List<ExpoExhibitor2> expoExhibitors2,
-                              List<ExpoExhibitor2> selectedExpoExhibitors) {
+    public void setExhibitors(List<ExpoExhibitor> expoExhibitors2,
+                              List<ExpoExhibitor> selectedExpoExhibitors) {
         this.expoExhibitors2.clear();
         this.expoExhibitors2Copy.clear();
         this.selectedExpoExhibitors.clear();
@@ -191,7 +191,7 @@ public class ExhibitorSelectionDialog {
 
     public interface DialogListener {
         void activateVoiceRecognition();
-        void sendExhibitors(List<ExpoExhibitor2> newSelectedExhibitors);
+        void sendExhibitors(List<ExpoExhibitor> newSelectedExhibitors);
     }
 
     public void setDialogListener(DialogListener dialogListener) {

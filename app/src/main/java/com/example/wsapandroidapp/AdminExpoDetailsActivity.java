@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -16,18 +17,21 @@ import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.Adapters.ExpoExhibitorAdapter;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.Division;
 import com.example.wsapandroidapp.DataModel.Exhibitor;
 import com.example.wsapandroidapp.DataModel.Expo;
-import com.example.wsapandroidapp.DataModel.ExpoExhibitor;
 import com.example.wsapandroidapp.DataModel.ExpoExhibitor2;
+import com.example.wsapandroidapp.DataModel.ExpoExhibitor;
 import com.example.wsapandroidapp.DataModel.ExpoExhibitors;
 import com.example.wsapandroidapp.DataModel.Supplier;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.ExhibitorSelectionDialog;
 import com.example.wsapandroidapp.DialogClasses.ExpoDivisionDialog;
 import com.example.wsapandroidapp.DialogClasses.ExpoFormDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -75,11 +79,16 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
 
     ExpoExhibitorAdapter expoExhibitorAdapter;
 
-    List<ExpoExhibitor> expoExhibitors = new ArrayList<>();
-    List<ExpoExhibitor2> expoExhibitors2 = new ArrayList<>(),
+    List<ExpoExhibitor2> expoExhibitor2s = new ArrayList<>();
+    List<ExpoExhibitor> expoExhibitors2 = new ArrayList<>(),
             selectedExpoExhibitors = new ArrayList<>();
 
     String selectedExpoId = "";
+
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,13 +145,16 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void sendExhibitors(List<ExpoExhibitor2> newSelectedExhibitors) {
+            public void sendExhibitors(List<ExpoExhibitor> newSelectedExhibitors) {
                 selectedExpoExhibitors.clear();
                 selectedExpoExhibitors.addAll(newSelectedExhibitors);
 
                 updateExhibitors();
             }
         });
+
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
 
         initDatabaseQuery();
 
@@ -183,10 +195,12 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
         divisionsQuery = firebaseDatabase.getReference("divisions");
         expoExhibitorsQuery = firebaseDatabase.getReference("expoExhibitors").orderByChild("id").equalTo(selectedExpoId);
         query = firebaseDatabase.getReference();
+        applicationQuery = firebaseDatabase.getReference("application");
 
         loadingDialog.showDialog();
         isListening = true;
         expoQuery.addValueEventListener(getExpos());
+        applicationQuery.addValueEventListener(getApplicationValue());
 
         expoFormDialog.setDatabaseReference(expoQuery.getRef());
     }
@@ -261,13 +275,13 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (isListening) {
-                    expoExhibitors.clear();
+                    expoExhibitor2s.clear();
 
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             ExpoExhibitors expoExhibitors2 = dataSnapshot.getValue(ExpoExhibitors.class);
                             if (expoExhibitors2 != null)
-                                expoExhibitors.addAll(expoExhibitors2.getExpoExhibitors().values());
+                                expoExhibitor2s.addAll(expoExhibitors2.getExpoExhibitors().values());
                             break;
                         }
 
@@ -301,19 +315,19 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
                             Exhibitor exhibitor = dataSnapshot.getValue(Exhibitor.class);
 
                             if (exhibitor != null) {
-                                ExpoExhibitor2 expoExhibitor2 =
-                                        new ExpoExhibitor2(
+                                ExpoExhibitor expoExhibitor =
+                                        new ExpoExhibitor(
                                                 exhibitor.getId(),
                                                 exhibitor.getExhibitor(),
                                                 exhibitor.getImage(),
                                                 false
                                         );
 
-                                expoExhibitors2.add(expoExhibitor2);
+                                expoExhibitors2.add(expoExhibitor);
 
-                                for (ExpoExhibitor expoExhibitor : expoExhibitors)
-                                    if (expoExhibitor.getId().equals(expoExhibitor2.getId()))
-                                        selectedExpoExhibitors.add(expoExhibitor2);
+                                for (ExpoExhibitor2 expoExhibitor2 : expoExhibitor2s)
+                                    if (expoExhibitor2.getId().equals(expoExhibitor.getId()))
+                                        selectedExpoExhibitors.add(expoExhibitor);
                             }
                         }
 
@@ -321,19 +335,19 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
                             Supplier supplier = dataSnapshot.getValue(Supplier.class);
 
                             if (supplier != null) {
-                                ExpoExhibitor2 expoExhibitor2 =
-                                        new ExpoExhibitor2(
+                                ExpoExhibitor expoExhibitor =
+                                        new ExpoExhibitor(
                                                 supplier.getId(),
                                                 supplier.getSupplier(),
                                                 supplier.getImage(),
                                                 true
                                         );
 
-                                expoExhibitors2.add(expoExhibitor2);
+                                expoExhibitors2.add(expoExhibitor);
 
-                                for (ExpoExhibitor expoExhibitor : expoExhibitors)
-                                    if (expoExhibitor.getId().equals(expoExhibitor2.getId()))
-                                        selectedExpoExhibitors.add(expoExhibitor2);
+                                for (ExpoExhibitor2 expoExhibitor2 : expoExhibitor2s)
+                                    if (expoExhibitor2.getId().equals(expoExhibitor.getId()))
+                                        selectedExpoExhibitors.add(expoExhibitor);
                             }
                         }
                     }
@@ -364,7 +378,7 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     private void updateUI() {
-        Glide.with(context).load(expo.getImage()).centerCrop().placeholder(R.drawable.ic_wsap).
+        Glide.with(context).load(expo.getImage()).placeholder(R.drawable.ic_wsap).
                 error(R.drawable.ic_wsap).into(imgPoster);
 
         tvExpo.setText(expo.getExpo());
@@ -411,16 +425,16 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
     private void updateExhibitors() {
         loadingDialog.showDialog();
 
-        Map<String, ExpoExhibitor> exhibitors = new HashMap<>();
+        Map<String, ExpoExhibitor2> exhibitors = new HashMap<>();
 
-        for (ExpoExhibitor2 selectedExpoExhibitor : selectedExpoExhibitors) {
-            ExpoExhibitor expoExhibitor =
-                    new ExpoExhibitor(
+        for (ExpoExhibitor selectedExpoExhibitor : selectedExpoExhibitors) {
+            ExpoExhibitor2 expoExhibitor2 =
+                    new ExpoExhibitor2(
                             selectedExpoExhibitor.getId(),
                             selectedExpoExhibitor.isMember()
                     );
 
-            exhibitors.put(selectedExpoExhibitor.getId(), expoExhibitor);
+            exhibitors.put(selectedExpoExhibitor.getId(), expoExhibitor2);
         }
 
         ExpoExhibitors expoExhibitors2 = new ExpoExhibitors(expo.getId(), exhibitors);
@@ -441,6 +455,62 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
 
                     messageDialog.showDialog();
                 });
+    }
+
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
     }
 
     @SuppressWarnings("deprecation")
@@ -481,6 +551,7 @@ public class AdminExpoDetailsActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         expoQuery.addListenerForSingleValueEvent(getExpos());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

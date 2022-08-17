@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.example.wsapandroidapp.DataModel.Exhibitor;
-import com.example.wsapandroidapp.DataModel.ExpoExhibitor2;
-import com.example.wsapandroidapp.DataModel.Supplier;
+import com.example.wsapandroidapp.DataModel.ExpoExhibitor;
 import com.example.wsapandroidapp.R;
 
 import java.util.List;
@@ -21,15 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExhibitorSelectionAdapter extends RecyclerView.Adapter<ExhibitorSelectionAdapter.ViewHolder> {
 
-    private final List<ExpoExhibitor2> expoExhibitors;
-    private final List<ExpoExhibitor2> selectedExpoExhibitors;
+    private final List<ExpoExhibitor> expoExhibitors;
+    private final List<ExpoExhibitor> selectedExpoExhibitors;
 
     private final  LayoutInflater layoutInflater;
 
     private final Context context;
 
-    public ExhibitorSelectionAdapter(Context context, List<ExpoExhibitor2> expoExhibitors,
-                                     List<ExpoExhibitor2> selectedExpoExhibitors) {
+    public ExhibitorSelectionAdapter(Context context, List<ExpoExhibitor> expoExhibitors,
+                                     List<ExpoExhibitor> selectedExpoExhibitors) {
         this.expoExhibitors = expoExhibitors;
         this.selectedExpoExhibitors = selectedExpoExhibitors;
         this.layoutInflater = LayoutInflater.from(context);
@@ -50,16 +48,16 @@ public class ExhibitorSelectionAdapter extends RecyclerView.Adapter<ExhibitorSel
         ConstraintLayout checkLayout = holder.checkLayout;
         ImageView imgPoster = holder.imgPoster;
 
-        ExpoExhibitor2 expoExhibitor2 = expoExhibitors.get(position);
+        ExpoExhibitor expoExhibitor = expoExhibitors.get(position);
 
         boolean isSelected = false;
-        for (ExpoExhibitor2 selectedExhibitor : selectedExpoExhibitors)
-            if (expoExhibitor2.getId().equals(selectedExhibitor.getId())) {
+        for (ExpoExhibitor selectedExhibitor : selectedExpoExhibitors)
+            if (expoExhibitor.getId().equals(selectedExhibitor.getId())) {
                 isSelected = true;
                 break;
             }
 
-        Glide.with(context).load(expoExhibitor2.getImage()).centerCrop().placeholder(R.drawable.ic_wsap).
+        Glide.with(context).load(expoExhibitor.getImage()).centerCrop().placeholder(R.drawable.ic_wsap).
                 error(R.drawable.ic_wsap).into(imgPoster);
 
         checkLayout.setVisibility(View.GONE);
@@ -68,8 +66,8 @@ public class ExhibitorSelectionAdapter extends RecyclerView.Adapter<ExhibitorSel
         boolean finalIsSelected = isSelected;
         cardView.setOnClickListener(view -> {
             if (adapterListener != null) {
-                if (finalIsSelected) adapterListener.onUnselect(expoExhibitor2);
-                else adapterListener.onSelect(expoExhibitor2);
+                if (finalIsSelected) adapterListener.onUnselect(expoExhibitor);
+                else adapterListener.onSelect(expoExhibitor);
             }
         });
     }
@@ -99,8 +97,8 @@ public class ExhibitorSelectionAdapter extends RecyclerView.Adapter<ExhibitorSel
     private AdapterListener adapterListener;
 
     public interface AdapterListener {
-        void onSelect(ExpoExhibitor2 expoExhibitor2);
-        void onUnselect(ExpoExhibitor2 expoExhibitor2);
+        void onSelect(ExpoExhibitor expoExhibitor);
+        void onUnselect(ExpoExhibitor expoExhibitor);
     }
 
     public void setAdapterListener(AdapterListener adapterListener) {

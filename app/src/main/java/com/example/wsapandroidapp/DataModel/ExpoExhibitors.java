@@ -6,12 +6,12 @@ import java.util.Map;
 public class ExpoExhibitors {
 
     private String id;
-    private Map<String, ExpoExhibitor> expoExhibitors = new HashMap<>();
+    private Map<String, ExpoExhibitor2> expoExhibitors = new HashMap<>();
 
     public ExpoExhibitors() {
     }
 
-    public ExpoExhibitors(String id, Map<String, ExpoExhibitor> expoExhibitors) {
+    public ExpoExhibitors(String id, Map<String, ExpoExhibitor2> expoExhibitors) {
         this.id = id;
         this.expoExhibitors = expoExhibitors;
     }
@@ -20,7 +20,7 @@ public class ExpoExhibitors {
         return id;
     }
 
-    public Map<String, ExpoExhibitor> getExpoExhibitors() {
+    public Map<String, ExpoExhibitor2> getExpoExhibitors() {
         return expoExhibitors;
     }
 }

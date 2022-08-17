@@ -3,6 +3,7 @@ package com.example.wsapandroidapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.speech.RecognizerIntent;
@@ -19,13 +20,16 @@ import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.Classes.Units;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.UserWeddingTimeline;
 import com.example.wsapandroidapp.DataModel.UserWeddingTimelineList;
 import com.example.wsapandroidapp.DataModel.UserWeddingTimelineTask;
 import com.example.wsapandroidapp.DataModel.WeddingTimeline;
 import com.example.wsapandroidapp.DataModel.WeddingTimelineTask;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.TargetWeddingDateFormDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,6 +91,11 @@ public class WeddingTimelineActivity extends AppCompatActivity {
 
     CountDownTimer countDownTimer;
 
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +133,9 @@ public class WeddingTimelineActivity extends AppCompatActivity {
             }
         });
 
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
+
         dateTime = new DateTime();
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -132,11 +144,13 @@ public class WeddingTimelineActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         weddingTimelineQuery = firebaseDatabase.getReference("weddingTimeline");
         userWeddingTimelineQuery = firebaseDatabase.getReference("userWeddingTimeline").orderByChild("id").equalTo(firebaseUser.getUid());
+        applicationQuery = firebaseDatabase.getReference("application");
 
         loadingDialog.showDialog();
         isListening = true;
         isUpdateMode = false;
         userWeddingTimelineQuery.addValueEventListener(getUserWeddingTimeline());
+        applicationQuery.addValueEventListener(getApplicationValue());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         weddingTimelineAdapter = new WeddingTimelineAdapter(context, userWeddingTimeline);
@@ -286,7 +300,7 @@ public class WeddingTimelineActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (isListening) {
                     List<WeddingTimelineTask> weddingTimelineTasks = new ArrayList<>();
-                    Map<String, UserWeddingTimeline> weddingTimeline = new HashMap<>();
+                    Map<String, UserWeddingTimeline> weddingTimelineMap = new HashMap<>();
 
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -296,10 +310,10 @@ public class WeddingTimelineActivity extends AppCompatActivity {
                                 weddingTimelineTasks.clear();
                                 weddingTimelineTasks.addAll(weddingTimeline1.getTasks().values());
 
-                                Map<String, UserWeddingTimelineTask> userWeddingTimelineTasks = new HashMap<>();
+                                Map<String, UserWeddingTimelineTask> userWeddingTimelineTaskMap = new HashMap<>();
 
                                 for (WeddingTimelineTask weddingTimelineTask : weddingTimelineTasks)
-                                    userWeddingTimelineTasks.put(
+                                    userWeddingTimelineTaskMap.put(
                                             weddingTimelineTask.getId(),
                                             new UserWeddingTimelineTask(
                                                     weddingTimelineTask.getId(),
@@ -315,14 +329,14 @@ public class WeddingTimelineActivity extends AppCompatActivity {
                                                 weddingTimeline1.getTitle(),
                                                 weddingTimeline1.getDuration(),
                                                 weddingTimeline1.getTimelineOrder(),
-                                                userWeddingTimelineTasks
+                                                userWeddingTimelineTaskMap
                                         );
 
-                                weddingTimeline.put(weddingTimeline1.getId(), userWeddingTimeline);
+                                weddingTimelineMap.put(weddingTimeline1.getId(), userWeddingTimeline);
                             }
                         }
 
-                    userWeddingTimelineList = new UserWeddingTimelineList(firebaseUser.getUid(), targetWeddingDate, weddingTimeline);
+                    userWeddingTimelineList = new UserWeddingTimelineList(firebaseUser.getUid(), targetWeddingDate, weddingTimelineMap);
 
                     userWeddingTimelineQuery.getRef().child(firebaseUser.getUid()).setValue(userWeddingTimelineList)
                             .addOnCompleteListener(task -> {
@@ -369,6 +383,8 @@ public class WeddingTimelineActivity extends AppCompatActivity {
 
         long duration = dateTime.getDateTimeValue() - new Date().getTime();
 
+        weddingTimelineAdapter.setDuration(duration);
+
         if (countDownTimer != null) countDownTimer.cancel();
 
         if (duration > 0) {
@@ -377,6 +393,8 @@ public class WeddingTimelineActivity extends AppCompatActivity {
                 public void onTick(long l) {
                     long milliseconds = dateTime.getDateTimeValue() - new Date().getTime();
 
+                    int weeks = (int) Units.msToWeek(milliseconds);
+                    milliseconds -= Units.weekToMs(weeks);
                     int days = (int) Units.msToDay(milliseconds);
                     milliseconds -= Units.dayToMs(days);
                     int hours = (int) Units.msToHour(milliseconds);
@@ -385,9 +403,19 @@ public class WeddingTimelineActivity extends AppCompatActivity {
                     milliseconds -= Units.minToMs(minutes);
                     int seconds = (int) Units.msToSec(milliseconds);
 
-                    tvTimeLeft.setText(
-                            getString(R.string.wedding_date_time_left, days, hours, minutes, seconds)
-                    );
+                    String string;
+                    if (weeks > 0)
+                        string = getString(R.string.wedding_date_time_left, weeks, days, hours, minutes, seconds);
+                    else if (days > 0)
+                        string = getString(R.string.wedding_date_time_left_1, days, hours, minutes, seconds);
+                    else if (hours > 0)
+                        string = getString(R.string.wedding_date_time_left_2, hours, minutes, seconds);
+                    else if (minutes > 0)
+                        string = getString(R.string.wedding_date_time_left_3, minutes, seconds);
+                    else
+                        string = getString(R.string.wedding_date_time_left_4, seconds);
+
+                    tvTimeLeft.setText(string);
                 }
 
                 @Override
@@ -425,6 +453,62 @@ public class WeddingTimelineActivity extends AppCompatActivity {
                 });
     }
 
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -438,6 +522,7 @@ public class WeddingTimelineActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         userWeddingTimelineQuery.addListenerForSingleValueEvent(getUserWeddingTimeline());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

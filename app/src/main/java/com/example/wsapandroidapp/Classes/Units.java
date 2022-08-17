@@ -6,6 +6,7 @@ public class Units {
     private static final int SEC_IN_MIN = 60;
     private static final int SEC_IN_HOUR = SEC_IN_MIN * 60;
     private static final int HOUR_IN_DAY = 24;
+    private static final int DAY_IN_WEEk = 7;
 
     public static double msToSec(double milliseconds) {
         return milliseconds / MS_IN_SEC;
@@ -23,6 +24,10 @@ public class Units {
         return milliseconds / MS_IN_SEC / SEC_IN_HOUR / HOUR_IN_DAY;
     }
 
+    public static double msToWeek(double milliseconds) {
+        return milliseconds / MS_IN_SEC / SEC_IN_HOUR / HOUR_IN_DAY / DAY_IN_WEEk;
+    }
+
     public static double secToMs(double seconds) {
         return seconds * MS_IN_SEC;
     }
@@ -37,6 +42,10 @@ public class Units {
 
     public static double dayToMs(double days) {
         return days * HOUR_IN_DAY * SEC_IN_HOUR * MS_IN_SEC;
+    }
+
+    public static double weekToMs(double days) {
+        return days * DAY_IN_WEEk * HOUR_IN_DAY * SEC_IN_HOUR * MS_IN_SEC;
     }
 
 }

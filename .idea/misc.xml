@@ -47,7 +47,7 @@
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/skip_button_ripple_bg.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/font/caladea.xml" value="0.2074074074074074" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_about.xml" value="0.2824074074074074" />
-        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_admin_exhibitor_categories.xml" value="0.21889696451474988" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_admin_exhibitor_categories.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_admin_exhibitor_details.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_admin_exhibitors.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_admin_expo_details.xml" value="0.27353313634444915" />
@@ -70,7 +70,7 @@
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_expos.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_guests.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_image.xml" value="0.2278751603249252" />
-        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_planner_suppliers.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_post_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_posts.xml" value="0.27704147071398033" />
@@ -81,6 +81,7 @@
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_supplier_details.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_suppliers.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_suppliers_checklist.xml" value="0.33" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_suppliers_comparative_sheet.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_topics.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_trivias.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/activity_tutorials.xml" value="0.27353313634444915" />
@@ -110,7 +111,10 @@
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_radio_button.xml" value="0.2726888982693119" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_category.xml" value="0.3312820512820513" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_checklist_category_layout.xml" value="0.25" />
-        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_checklist_layout.xml" value="0.27353313634444915" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_checklist_layout.xml" value="0.5" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_comparative_sheet_input.xml" value="0.27353313634444915" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_comparative_sheet_input_layout.xml" value="0.27353313634444915" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_comparative_sheet_layout.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_supplier_layout.xml" value="0.4102079395085066" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_topic_layout.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/custom_topic_searched_item_layout.xml" value="0.33" />
@@ -121,7 +125,9 @@
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_category_image_form_layout.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_category_image_layout.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_category_with_image_form_layout.xml" value="0.27353313634444915" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_change_option_order_layout.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_change_role_layout.xml" value="0.2278751603249252" />
+        <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_change_supplier_option_order_layout.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_change_user_role_layout.xml" value="0.27353313634444915" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_confirmation_layout.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/layout/dialog_contact_info_form_layout.xml" value="0.33" />

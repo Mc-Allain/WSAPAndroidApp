@@ -15,16 +15,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.CategoryImage;
 import com.example.wsapandroidapp.DataModel.ContactInfo;
 import com.example.wsapandroidapp.DataModel.Exhibitor;
 import com.example.wsapandroidapp.DataModel.SocialMedia;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.CategoryImageDialog;
 import com.example.wsapandroidapp.DialogClasses.ContactInformationFormDialog;
 import com.example.wsapandroidapp.DialogClasses.DescriptionFormDialog;
 import com.example.wsapandroidapp.DialogClasses.ExhibitorInformationFormDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.SocialMediaFormDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,6 +78,11 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
     CategoryImage category;
 
     String selectedExhibitorId = "";
+
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +165,9 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
             socialMediaFormDialog.dismissDialog();
         });
 
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
+
         selectedExhibitorId = getIntent().getStringExtra("exhibitorId");
 
         initDatabaseQuery();
@@ -194,6 +205,7 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         exhibitorQuery = firebaseDatabase.getReference("exhibitors").orderByChild("id").equalTo(selectedExhibitorId);
         exhibitorCategoriesQuery = firebaseDatabase.getReference("exhibitorCategories").orderByChild("category");
+        applicationQuery = firebaseDatabase.getReference("application");
 
         loadingDialog.showDialog();
         isListening = true;
@@ -202,6 +214,7 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
         exhibitorInformationFormDialog.setDatabaseReference(exhibitorQuery.getRef());
         categoryImageDialog.setQuery(exhibitorCategoriesQuery);
         descriptionFormDialog.setDatabaseReference(exhibitorQuery.getRef());
+        applicationQuery.addValueEventListener(getApplicationValue());
     }
 
     private ValueEventListener getExhibitor() {
@@ -269,7 +282,7 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        Glide.with(context).load(exhibitor.getImage()).centerCrop().placeholder(R.drawable.ic_wsap).
+        Glide.with(context).load(exhibitor.getImage()).placeholder(R.drawable.ic_wsap).
                 error(R.drawable.ic_wsap).into(imgPoster);
 
         imgFacebook.setVisibility(View.GONE);
@@ -433,6 +446,62 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
                 });
     }
 
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
+    }
+
     @SuppressWarnings("deprecation")
     private void openStorage() {
         Intent intent = new Intent();
@@ -468,6 +537,7 @@ public class AdminExhibitorDetailsActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         exhibitorQuery.addListenerForSingleValueEvent(getExhibitor());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

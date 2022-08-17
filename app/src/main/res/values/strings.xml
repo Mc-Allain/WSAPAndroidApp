@@ -27,6 +27,7 @@
     <string name="submit">Submit</string>
     <string name="exit">Exit</string>
     <string name="save">Save</string>
+    <string name="reset">Reset</string>
 
     <string name="add">Add</string>
     <string name="update">Update</string>
@@ -171,6 +172,7 @@
     <string name="budget_plan">Budget Plan</string>
     <string name="wedding_timeline">Wedding Timeline Checklist</string>
     <string name="suppliers_checklist">Suppliers Checklist</string>
+    <string name="suppliers_comparative_sheet">Suppliers Comparative Sheet</string>
     <string name="checklist">Checklist</string>
     <string name="appointments">Appointments</string>
     <string name="schedules">Schedules</string>
@@ -250,9 +252,17 @@
 
     <string name="target_wedding_date">Target Wedding Date</string>
     <string name="target_wedding_date_dummy">January 01, 2023</string>
-    <string name="wedding_date_time_left">%d Days, %d Hrs, %d Mins &amp; %d Secs Left</string>
+    <string name="wedding_date_time_left">%d Weeks, %d Days, %d Hrs, %d Mins &amp; %d Secs Left</string>
+    <string name="wedding_date_time_left_1">%d Days, %d Hrs, %d Mins &amp; %d Secs Left</string>
+    <string name="wedding_date_time_left_2">%d Hrs, %d Mins &amp; %d Secs Left</string>
+    <string name="wedding_date_time_left_3">%d Mins &amp; %d Secs Left</string>
+    <string name="wedding_date_time_left_4">%d Secs Left</string>
     <string name="wedding_day">Wedding Day!</string>
     <string name="congratulations">Congratulations!</string>
+
+    <string name="wedding_timeline_dummy_title">12 Months or more before the wedding</string>
+    <string name="wedding_timeline_completed_task">Completed %d/%d</string>
+    <string name="wedding_timeline_completed_task_dummy" tools:ignore="TypographyFractions">Completed 1/4</string>
 
     <string name="supplier_checklist_category_dummy">Full Planning</string>
     <string name="supplier_checklist_dummy">Events Planner</string>
@@ -260,9 +270,15 @@
     <string name="contact_person">Contact Person</string>
     <string name="contact_number">Contact Number</string>
 
-    <string name="wedding_timeline_dummy_title">12 Months or more before the wedding</string>
-    <string name="wedding_timeline_completed_task">Completed %d/%d</string>
-    <string name="wedding_timeline_completed_task_dummy" tools:ignore="TypographyFractions">Completed 1/4</string>
+    <string name="option_1">First Option</string>
+    <string name="option_2">Second Option</string>
+    <string name="option_3">Third Option</string>
+    <string name="remarks">Remarks</string>
+
+    <string name="unsaved_changes">Unsaved Changes</string>
+    <string name="saved">Saved</string>
+
+    <string name="move_option">Move Option</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

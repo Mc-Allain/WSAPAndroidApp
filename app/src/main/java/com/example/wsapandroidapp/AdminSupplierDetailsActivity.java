@@ -15,16 +15,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.CategoryImage;
 import com.example.wsapandroidapp.DataModel.Chapter;
 import com.example.wsapandroidapp.DataModel.ContactInfo;
 import com.example.wsapandroidapp.DataModel.SocialMedia;
 import com.example.wsapandroidapp.DataModel.Supplier;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.CategoryImageDialog;
 import com.example.wsapandroidapp.DialogClasses.ContactInformationFormDialog;
 import com.example.wsapandroidapp.DialogClasses.DescriptionFormDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.SocialMediaFormDialog;
 import com.example.wsapandroidapp.DialogClasses.SupplierInformationFormDialog;
 import com.google.firebase.database.DataSnapshot;
@@ -77,6 +80,11 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
     Chapter chapter;
 
     String selectedSupplierId = "";
+
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +169,9 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
             socialMediaFormDialog.dismissDialog();
         });
 
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
+
         selectedSupplierId = getIntent().getStringExtra("supplierId");
 
         initDatabaseQuery();
@@ -199,6 +210,7 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
         supplierQuery = firebaseDatabase.getReference("suppliers").orderByChild("id").equalTo(selectedSupplierId);
         supplierCategoriesQuery = firebaseDatabase.getReference("supplierCategories").orderByChild("category");
         chaptersQuery = firebaseDatabase.getReference("chapters").orderByChild("chapter");
+        applicationQuery = firebaseDatabase.getReference("application");
 
         loadingDialog.showDialog();
         isListening = true;
@@ -207,6 +219,7 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
         supplierInformationFormDialog.setDatabaseReference(supplierQuery.getRef());
         categoryImageDialog.setQuery(supplierCategoriesQuery);
         descriptionFormDialog.setDatabaseReference(supplierQuery.getRef());
+        applicationQuery.addValueEventListener(getApplicationValue());
     }
 
     private ValueEventListener getSupplier() {
@@ -306,7 +319,7 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        Glide.with(context).load(supplier.getImage()).centerCrop().placeholder(R.drawable.ic_wsap).
+        Glide.with(context).load(supplier.getImage()).placeholder(R.drawable.ic_wsap).
                 error(R.drawable.ic_wsap).into(imgPoster);
 
         imgFacebook.setVisibility(View.GONE);
@@ -471,6 +484,62 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
                 });
     }
 
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
+    }
+
     @SuppressWarnings("deprecation")
     private void openStorage() {
         Intent intent = new Intent();
@@ -506,6 +575,7 @@ public class AdminSupplierDetailsActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         supplierQuery.addListenerForSingleValueEvent(getSupplier());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

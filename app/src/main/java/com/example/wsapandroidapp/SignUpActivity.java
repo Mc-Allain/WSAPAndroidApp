@@ -23,6 +23,7 @@ import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.Classes.Units;
 import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.User;
+import com.example.wsapandroidapp.DataModel.UserRole;
 import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
@@ -354,6 +355,7 @@ public class SignUpActivity extends AppCompatActivity {
                 user.setDisplayName(Credentials.fullTrim(signUpFirstName + " " + signUpLastName));
                 user.setFirstName(Credentials.fullTrim(signUpFirstName));
                 user.setLastName(Credentials.fullTrim(signUpLastName));
+                user.setRole(new UserRole(false, false, false, false));
 
                 DatabaseReference userRef = firebaseDatabase.getReference("users").child(firebaseUser.getUid());
 

@@ -13,21 +13,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.wsapandroidapp.Adapters.SupplierChecklistAdapter;
+import com.example.wsapandroidapp.Adapters.SupplierComparativeSheetAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
+import com.example.wsapandroidapp.Classes.Credentials;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.Application;
-import com.example.wsapandroidapp.DataModel.SupplierChecklist;
-import com.example.wsapandroidapp.DataModel.SupplierChecklistCategory;
-import com.example.wsapandroidapp.DataModel.UserSupplierChecklist;
-import com.example.wsapandroidapp.DataModel.UserSupplierChecklistCategory;
-import com.example.wsapandroidapp.DataModel.UserSupplierChecklistCategoryList;
+import com.example.wsapandroidapp.DataModel.SupplierComparativeSheetCategory;
+import com.example.wsapandroidapp.DataModel.SupplierComparativeSheetItem;
+import com.example.wsapandroidapp.DataModel.SupplierOption;
+import com.example.wsapandroidapp.DataModel.UserSupplierComparativeSheetCategory;
+import com.example.wsapandroidapp.DataModel.UserSupplierComparativeSheetCategoryList;
+import com.example.wsapandroidapp.DataModel.UserSupplierComparativeSheetItem;
 import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,7 +48,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SuppliersChecklistActivity extends AppCompatActivity {
+public class SuppliersComparativeSheetActivity extends AppCompatActivity {
 
     EditText etSearch;
     TextView tvMessage;
@@ -63,19 +63,19 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
 
-    Query supplierChecklistQuery, userSupplierChecklistQuery;
+    Query supplierComparativeSheetQuery, userSupplierComparativeSheetQuery;
 
     boolean isListening;
     boolean isUpdateMode;
 
-    List<UserSupplierChecklistCategory> userSupplierChecklistCategories = new ArrayList<>(),
-            userSupplierChecklistCategoriesCopy = new ArrayList<>();
+    List<UserSupplierComparativeSheetCategory> userSupplierComparativeSheetCategories = new ArrayList<>(),
+            userSupplierComparativeSheetCategoriesCopy = new ArrayList<>();
 
     List list = new ArrayList();
 
-    SupplierChecklistAdapter supplierChecklistAdapter;
+    SupplierComparativeSheetAdapter supplierComparativeSheetAdapter;
 
-    UserSupplierChecklistCategoryList userSupplierChecklistCategoryList;
+    UserSupplierComparativeSheetCategoryList userSupplierComparativeSheetCategoryList;
 
     ComponentManager componentManager;
 
@@ -89,13 +89,13 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_suppliers_checklist);
+        setContentView(R.layout.activity_suppliers_comparative_sheet);
 
         etSearch = findViewById(R.id.etSearch);
         tvMessage = findViewById(R.id.tvMessage);
         recyclerView = findViewById(R.id.recyclerView);
 
-        context = SuppliersChecklistActivity.this;
+        context = SuppliersComparativeSheetActivity.this;
 
         loadingDialog = new LoadingDialog(context);
         messageDialog = new MessageDialog(context);
@@ -106,32 +106,32 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
 
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
-        supplierChecklistQuery = firebaseDatabase.getReference("supplierChecklist");
-        userSupplierChecklistQuery = firebaseDatabase.getReference("userSupplierChecklist").orderByChild("id").equalTo(firebaseUser.getUid());
+        supplierComparativeSheetQuery = firebaseDatabase.getReference("supplierComparativeSheet");
+        userSupplierComparativeSheetQuery = firebaseDatabase.getReference("userSupplierComparativeSheet").orderByChild("id").equalTo(firebaseUser.getUid());
         applicationQuery = firebaseDatabase.getReference("application");
 
         loadingDialog.showDialog();
         isListening = true;
         isUpdateMode = false;
-        userSupplierChecklistQuery.addValueEventListener(getUserSupplierChecklistCategory());
+        userSupplierComparativeSheetQuery.addValueEventListener(getUserSupplierComparativeSheetCategory());
         applicationQuery.addValueEventListener(getApplicationValue());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        supplierChecklistAdapter = new SupplierChecklistAdapter(context, list);
+        supplierComparativeSheetAdapter = new SupplierComparativeSheetAdapter(context, list);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(supplierChecklistAdapter);
+        recyclerView.setAdapter(supplierComparativeSheetAdapter);
 
-        supplierChecklistAdapter.setAdapterListener(supplierChecklist -> {
-            String categoryId = supplierChecklist.getId(), checklistId = supplierChecklist.getId();
+        supplierComparativeSheetAdapter.setAdapterListener(supplierComparativeSheetItem -> {
+            String categoryId = supplierComparativeSheetItem.getId(), checklistId = supplierComparativeSheetItem.getId();
 
-            for (UserSupplierChecklistCategory supplierChecklistCategory : userSupplierChecklistCategories)
-                for (UserSupplierChecklist userSupplierChecklist : supplierChecklistCategory.getChecklist().values())
-                    if (userSupplierChecklist.getId().equals(checklistId)) {
-                        categoryId = supplierChecklistCategory.getId();
+            for (UserSupplierComparativeSheetCategory supplierComparativeSheetCategory : userSupplierComparativeSheetCategories)
+                for (UserSupplierComparativeSheetItem userSupplierComparativeSheetItem : supplierComparativeSheetCategory.getItems().values())
+                    if (userSupplierComparativeSheetItem.getId().equals(checklistId)) {
+                        categoryId = supplierComparativeSheetCategory.getId();
                         break;
                     }
 
-            updateSupplierChecklist(categoryId, checklistId, supplierChecklist);
+            updateSupplierComparativeSheetItem(categoryId, checklistId, supplierComparativeSheetItem);
         });
 
         componentManager = new ComponentManager(context);
@@ -153,41 +153,41 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 searchValue = editable != null ? editable.toString() : "";
 
-                filterTasks();
+                filterItems();
             }
         });
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void filterTasks() {
-        List<UserSupplierChecklistCategory> userSupplierChecklistCategoriesTemp =
-                new ArrayList<>(userSupplierChecklistCategoriesCopy);
+    private void filterItems() {
+        List<UserSupplierComparativeSheetCategory> userSupplierChecklistCategoriesTemp =
+                new ArrayList<>(userSupplierComparativeSheetCategoriesCopy);
 
-        userSupplierChecklistCategories.clear();
+        userSupplierComparativeSheetCategories.clear();
 
         for (int i = 0; i < userSupplierChecklistCategoriesTemp.size(); i++) {
-            UserSupplierChecklistCategory userSupplierChecklistCategory = userSupplierChecklistCategoriesTemp.get(i);
+            UserSupplierComparativeSheetCategory userSupplierChecklistCategory = userSupplierChecklistCategoriesTemp.get(i);
 
-            if (isSearched(userSupplierChecklistCategory)) userSupplierChecklistCategories.add(userSupplierChecklistCategory);
+            if (isSearched(userSupplierChecklistCategory)) userSupplierComparativeSheetCategories.add(userSupplierChecklistCategory);
         }
 
         list.clear();
 
-        for (UserSupplierChecklistCategory userSupplierChecklistCategory : userSupplierChecklistCategories) {
-            list.add(userSupplierChecklistCategory);
+        for (UserSupplierComparativeSheetCategory userSupplierComparativeSheetCategory : userSupplierComparativeSheetCategories) {
+            list.add(userSupplierComparativeSheetCategory);
 
-            List<UserSupplierChecklist> userSupplierChecklist =
-                    new ArrayList<>(userSupplierChecklistCategory.getChecklist().values());
+            List<UserSupplierComparativeSheetItem> userSupplierComparativeSheetItemItems =
+                    new ArrayList<>(userSupplierComparativeSheetCategory.getItems().values());
 
-            userSupplierChecklist.sort(Comparator.comparingInt(UserSupplierChecklist::getOrder));
+            userSupplierComparativeSheetItemItems.sort(Comparator.comparingInt(UserSupplierComparativeSheetItem::getOrder));
 
-            for (UserSupplierChecklist supplierChecklist : userSupplierChecklist)
-                if (supplierChecklist.getTask().toLowerCase().contains(searchValue.toLowerCase()) ||
-                        userSupplierChecklistCategory.getCategory().toLowerCase().contains(searchValue.toLowerCase()))
-                    list.add(supplierChecklist);
+            for (UserSupplierComparativeSheetItem userSupplierComparativeSheetItem : userSupplierComparativeSheetItemItems)
+                if (userSupplierComparativeSheetItem.getItem().toLowerCase().contains(searchValue.toLowerCase()) ||
+                        userSupplierComparativeSheetCategory.getCategory().toLowerCase().contains(searchValue.toLowerCase()))
+                    list.add(userSupplierComparativeSheetItem);
         }
 
-        if (userSupplierChecklistCategories.size() == 0) {
+        if (userSupplierComparativeSheetCategories.size() == 0) {
             tvMessage.setVisibility(View.VISIBLE);
 
             String noRecordsError = getString(R.string.no_record, "Record");
@@ -198,16 +198,16 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
 
         etSearch.setVisibility(View.VISIBLE);
 
-        supplierChecklistAdapter.notifyDataSetChanged();
+        supplierComparativeSheetAdapter.notifyDataSetChanged();
 
         loadingDialog.dismissDialog();
     }
 
-    private boolean isSearched(UserSupplierChecklistCategory userSupplierChecklistCategory) {
-        boolean isSearched = userSupplierChecklistCategory.getCategory().toLowerCase().contains(searchValue.toLowerCase());
+    private boolean isSearched(UserSupplierComparativeSheetCategory userSupplierComparativeSheetCategory) {
+        boolean isSearched = userSupplierComparativeSheetCategory.getCategory().toLowerCase().contains(searchValue.toLowerCase());
 
-        for (UserSupplierChecklist userSupplierChecklist : userSupplierChecklistCategory.getChecklist().values())
-            if (userSupplierChecklist.getTask().toLowerCase().contains(searchValue.toLowerCase())) {
+        for (UserSupplierComparativeSheetItem userSupplierChecklist : userSupplierComparativeSheetCategory.getItems().values())
+            if (userSupplierChecklist.getItem().toLowerCase().contains(searchValue.toLowerCase())) {
                 isSearched = true;
                 break;
             }
@@ -215,35 +215,32 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
         return searchValue.trim().length() == 0 || isSearched;
     }
 
-    private ValueEventListener getUserSupplierChecklistCategory() {
+    private ValueEventListener getUserSupplierComparativeSheetCategory() {
         return new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (isListening) {
                     boolean isRead = false;
-                    userSupplierChecklistCategories.clear();
+                    userSupplierComparativeSheetCategories.clear();
 
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            userSupplierChecklistCategoryList = dataSnapshot.getValue(UserSupplierChecklistCategoryList.class);
+                            userSupplierComparativeSheetCategoryList = dataSnapshot.getValue(UserSupplierComparativeSheetCategoryList.class);
 
-                            if (userSupplierChecklistCategoryList != null) {
-                                userSupplierChecklistCategories.addAll(userSupplierChecklistCategoryList.getSupplierChecklistCategories().values());
+                            if (userSupplierComparativeSheetCategoryList != null) {
+                                userSupplierComparativeSheetCategories.addAll(userSupplierComparativeSheetCategoryList.getSupplierComparativeSheetCategories().values());
                                 isRead = true;
                                 isUpdateMode = true;
                                 break;
                             }
                         }
-                    else {
-                        loadingDialog.showDialog();
-                        supplierChecklistQuery.addListenerForSingleValueEvent(getSupplierChecklistCategory());
-                    }
+                    else supplierComparativeSheetQuery.addListenerForSingleValueEvent(getSupplierComparativeSheetCategory());
 
                     if (isRead) {
-                        userSupplierChecklistCategories.sort(Comparator.comparingInt(UserSupplierChecklistCategory::getOrder));
+                        userSupplierComparativeSheetCategories.sort(Comparator.comparingInt(UserSupplierComparativeSheetCategory::getOrder));
 
-                        userSupplierChecklistCategoriesCopy = new ArrayList<>(userSupplierChecklistCategories);
+                        userSupplierComparativeSheetCategoriesCopy = new ArrayList<>(userSupplierComparativeSheetCategories);
 
                         updateUI();
                     }
@@ -255,66 +252,76 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
                 Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
                 loadingDialog.showDialog();
 
-                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "User Supplier Checklist"));
+                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "User Supplier Comparative Sheet"));
                 messageDialog.setMessageType(Enums.ERROR_MESSAGE);
                 messageDialog.showDialog();
             }
         };
     }
 
-    private ValueEventListener getSupplierChecklistCategory() {
+    private ValueEventListener getSupplierComparativeSheetCategory() {
         return new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (isListening) {
-                    List<SupplierChecklist> supplierChecklist = new ArrayList<>();
-                    Map<String, UserSupplierChecklistCategory> userSupplierChecklistCategoryMap = new HashMap<>();
+                    List<SupplierComparativeSheetItem> supplierComparativeSheetItems = new ArrayList<>();
+                    Map<String, UserSupplierComparativeSheetCategory> userSupplierChecklistCategoryMap = new HashMap<>();
 
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            SupplierChecklistCategory supplierChecklistCategory =
-                                    dataSnapshot.getValue(SupplierChecklistCategory.class);
+                            SupplierComparativeSheetCategory supplierComparativeSheetCategory =
+                                    dataSnapshot.getValue(SupplierComparativeSheetCategory.class);
 
-                            if (supplierChecklistCategory != null) {
-                                supplierChecklist.clear();
-                                supplierChecklist.addAll(supplierChecklistCategory.getChecklist().values());
+                            if (supplierComparativeSheetCategory != null) {
+                                supplierComparativeSheetItems.clear();
+                                supplierComparativeSheetItems.addAll(supplierComparativeSheetCategory.getItems().values());
 
-                                Map<String, UserSupplierChecklist> userSupplierChecklistMap = new HashMap<>();
+                                Map<String, UserSupplierComparativeSheetItem> userSupplierComparativeSheetMap = new HashMap<>();
 
-                                for (SupplierChecklist supplierChecklist1 : supplierChecklist)
-                                    userSupplierChecklistMap.put(
-                                            supplierChecklist1.getId(),
-                                            new UserSupplierChecklist(
-                                                    supplierChecklist1.getId(),
-                                                    supplierChecklist1.getTask(),
-                                                    supplierChecklist1.getOrder(),
-                                                    "", "", "", 0
+                                Map<String, SupplierOption> supplierOptionMap = new HashMap<>();
+
+                                String id = Credentials.getUniqueId();
+                                supplierOptionMap.put(id, new SupplierOption(id, "", 1));
+                                id = Credentials.getUniqueId();
+                                supplierOptionMap.put(id, new SupplierOption(id, "", 2));
+                                id = Credentials.getUniqueId();
+                                supplierOptionMap.put(id, new SupplierOption(id, "", 3));
+
+                                for (SupplierComparativeSheetItem supplierComparativeSheetItem : supplierComparativeSheetItems)
+                                    userSupplierComparativeSheetMap.put(
+                                            supplierComparativeSheetItem.getId(),
+                                            new UserSupplierComparativeSheetItem(
+                                                    supplierComparativeSheetItem.getId(),
+                                                    supplierComparativeSheetItem.getItem(),
+                                                    "",
+                                                    supplierComparativeSheetItem.getOrder(),
+                                                    supplierOptionMap
                                             )
                                     );
 
-                                UserSupplierChecklistCategory userSupplierChecklistCategory =
-                                        new UserSupplierChecklistCategory(
-                                                supplierChecklistCategory.getId(),
-                                                supplierChecklistCategory.getCategory(),
-                                                supplierChecklistCategory.getOrder(),
-                                                userSupplierChecklistMap
+                                UserSupplierComparativeSheetCategory userSupplierChecklistCategory =
+                                        new UserSupplierComparativeSheetCategory(
+                                                supplierComparativeSheetCategory.getId(),
+                                                supplierComparativeSheetCategory.getCategory(),
+                                                supplierComparativeSheetCategory.getOrder(),
+                                                userSupplierComparativeSheetMap
                                         );
 
                                 userSupplierChecklistCategoryMap.put(userSupplierChecklistCategory.getId(), userSupplierChecklistCategory);
                             }
                         }
 
-                    userSupplierChecklistCategoryList = new UserSupplierChecklistCategoryList(firebaseUser.getUid(), userSupplierChecklistCategoryMap);
+                    userSupplierComparativeSheetCategoryList = new UserSupplierComparativeSheetCategoryList(firebaseUser.getUid(), userSupplierChecklistCategoryMap);
 
-                    userSupplierChecklistQuery.getRef().child(firebaseUser.getUid()).setValue(userSupplierChecklistCategoryList)
+                    userSupplierComparativeSheetQuery.getRef().child(firebaseUser.getUid()).setValue(userSupplierComparativeSheetCategoryList)
                             .addOnCompleteListener(task -> {
                                 if (!task.isSuccessful() && task.getException() != null) {
                                     messageDialog.setMessageType(Enums.ERROR_MESSAGE);
                                     messageDialog.setMessage(task.getException().toString());
                                     messageDialog.showDialog();
                                 }
-                            });
+                            });;
                 }
             }
 
@@ -323,7 +330,7 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
                 Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
                 loadingDialog.showDialog();
 
-                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "Supplier Checklist"));
+                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "Supplier Comparative Sheet"));
                 messageDialog.setMessageType(Enums.ERROR_MESSAGE);
                 messageDialog.showDialog();
             }
@@ -332,16 +339,16 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     private void updateUI() {
-        filterTasks();
+        filterItems();
     }
 
-    private void updateSupplierChecklist(String categoryId, String checklistId, UserSupplierChecklist supplierChecklist) {
-        userSupplierChecklistQuery.getRef().child(firebaseUser.getUid())
-                .child("supplierChecklistCategories").child(categoryId)
-                .child("checklist").child(checklistId).setValue(supplierChecklist)
+    private void updateSupplierComparativeSheetItem(String categoryId, String itemId, UserSupplierComparativeSheetItem supplierComparativeSheetItem) {
+        userSupplierComparativeSheetQuery.getRef().child(firebaseUser.getUid())
+                .child("supplierComparativeSheetCategories").child(categoryId)
+                .child("items").child(itemId).setValue(supplierComparativeSheetItem)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful())
-                        supplierChecklistAdapter.setChangesSaved();
+                        supplierComparativeSheetAdapter.setChangesSaved();
                 });
     }
 
@@ -413,7 +420,7 @@ public class SuppliersChecklistActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         isListening = true;
-        userSupplierChecklistQuery.addListenerForSingleValueEvent(getUserSupplierChecklistCategory());
+        userSupplierComparativeSheetQuery.addListenerForSingleValueEvent(getUserSupplierComparativeSheetCategory());
         applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();

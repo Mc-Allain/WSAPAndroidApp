@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.example.wsapandroidapp.DataModel.ExpoExhibitor2;
+import com.example.wsapandroidapp.DataModel.ExpoExhibitor;
 import com.example.wsapandroidapp.R;
 
 import java.util.List;
@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExpoExhibitorAdapter extends RecyclerView.Adapter<ExpoExhibitorAdapter.ViewHolder> {
 
-    private final List<ExpoExhibitor2> expoExhibitors;
+    private final List<ExpoExhibitor> expoExhibitors;
 
     private final  LayoutInflater layoutInflater;
 
     private final Context context;
 
-    public ExpoExhibitorAdapter(Context context, List<ExpoExhibitor2> expoExhibitors) {
+    public ExpoExhibitorAdapter(Context context, List<ExpoExhibitor> expoExhibitors) {
         this.expoExhibitors = expoExhibitors;
         this.layoutInflater = LayoutInflater.from(context);
 
@@ -43,7 +43,7 @@ public class ExpoExhibitorAdapter extends RecyclerView.Adapter<ExpoExhibitorAdap
         CardView cardView = holder.cardView;
         ImageView imgPoster = holder.imgPoster;
 
-        ExpoExhibitor2 expoExhibitor = expoExhibitors.get(position);
+        ExpoExhibitor expoExhibitor = expoExhibitors.get(position);
 
         Glide.with(context).load(expoExhibitor.getImage()).centerCrop().placeholder(R.drawable.ic_wsap).
                 error(R.drawable.ic_wsap).into(imgPoster);
@@ -76,7 +76,7 @@ public class ExpoExhibitorAdapter extends RecyclerView.Adapter<ExpoExhibitorAdap
     private AdapterListener adapterListener;
 
     public interface AdapterListener {
-        void onClick(ExpoExhibitor2 expoExhibitor);
+        void onClick(ExpoExhibitor expoExhibitor);
     }
 
     public void setAdapterListener(AdapterListener adapterListener) {

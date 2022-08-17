@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -22,10 +23,13 @@ import android.widget.TextView;
 import com.example.wsapandroidapp.Adapters.SupplierAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.Chapter;
 import com.example.wsapandroidapp.DataModel.Supplier;
 import com.example.wsapandroidapp.DataModel.CategoryImage;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -64,6 +68,11 @@ public class SuppliersActivity extends AppCompatActivity {
 
     String searchSupplier = "", selectedCategoryId = "";
 
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +88,8 @@ public class SuppliersActivity extends AppCompatActivity {
         context = SuppliersActivity.this;
 
         messageDialog = new MessageDialog(context);
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
 
         selectedCategoryId = getIntent().getStringExtra("categoryId");
 
@@ -86,11 +97,13 @@ public class SuppliersActivity extends AppCompatActivity {
         supplierCategoriesQuery = firebaseDatabase.getReference("supplierCategories");
         chaptersQuery = firebaseDatabase.getReference("chapters").orderByChild("chapter");
         suppliersQuery = firebaseDatabase.getReference("suppliers").orderByChild("supplier");
+        applicationQuery = firebaseDatabase.getReference("application");
 
         pbLoading2.setVisibility(View.VISIBLE);
         isListening = true;
         etSearch.setVisibility(View.INVISIBLE);
         supplierCategoriesQuery.addValueEventListener(getSupplierCategories());
+        applicationQuery.addValueEventListener(getApplicationValue());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         supplierAdapter = new SupplierAdapter(context, suppliers, chapters);
@@ -263,6 +276,62 @@ public class SuppliersActivity extends AppCompatActivity {
         };
     }
 
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -278,6 +347,7 @@ public class SuppliersActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         supplierCategoriesQuery.addListenerForSingleValueEvent(getSupplierCategories());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

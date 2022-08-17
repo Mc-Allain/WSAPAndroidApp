@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -20,13 +21,16 @@ import android.widget.TextView;
 import com.example.wsapandroidapp.Adapters.AdminSupplierAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.CategoryImage;
 import com.example.wsapandroidapp.DataModel.Chapter;
 import com.example.wsapandroidapp.DataModel.Supplier;
+import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.CategoryImageDialog;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.SupplierFormDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -80,6 +84,11 @@ public class AdminSuppliersActivity extends AppCompatActivity {
 
     Supplier selectedSupplier = new Supplier();
 
+    AppStatusPromptDialog appStatusPromptDialog;
+    NewVersionPromptDialog newVersionPromptDialog;
+    Query applicationQuery;
+    Application application = new Application();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +136,9 @@ public class AdminSuppliersActivity extends AppCompatActivity {
             moveCategory();
         });
 
+        appStatusPromptDialog = new AppStatusPromptDialog(context);
+        newVersionPromptDialog = new NewVersionPromptDialog(context);
+
         selectedCategoryId = getIntent().getStringExtra("categoryId");
 
         supplierFormDialog.setCategoryId(selectedCategoryId);
@@ -135,6 +147,7 @@ public class AdminSuppliersActivity extends AppCompatActivity {
         supplierCategoriesQuery = firebaseDatabase.getReference("supplierCategories").orderByChild("category");
         chaptersQuery = firebaseDatabase.getReference("chapters").orderByChild("chapter");
         suppliersQuery = firebaseDatabase.getReference("suppliers").orderByChild("supplier");
+        applicationQuery = firebaseDatabase.getReference("application");
 
         pbLoading2.setVisibility(View.VISIBLE);
         isListening = true;
@@ -143,6 +156,7 @@ public class AdminSuppliersActivity extends AppCompatActivity {
 
         supplierFormDialog.setDatabaseReference(suppliersQuery.getRef());
         categoryImageDialog.setQuery(supplierCategoriesQuery);
+        applicationQuery.addValueEventListener(getApplicationValue());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         adminSupplierAdapter = new AdminSupplierAdapter(context, suppliers, chapters);
@@ -364,6 +378,62 @@ public class AdminSuppliersActivity extends AppCompatActivity {
                 });
     }
 
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
+    }
+
     @SuppressWarnings("deprecation")
     private void openStorage() {
         Intent intent = new Intent();
@@ -404,6 +474,7 @@ public class AdminSuppliersActivity extends AppCompatActivity {
     public void onResume() {
         isListening = true;
         supplierCategoriesQuery.addListenerForSingleValueEvent(getSupplierCategories());
+        applicationQuery.addListenerForSingleValueEvent(getApplicationValue());
 
         super.onResume();
     }

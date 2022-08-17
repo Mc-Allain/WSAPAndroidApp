@@ -239,7 +239,7 @@ public class ComponentManager {
             button.setTextColor(context.getColor(R.color.white));
         } else {
             button.setBackgroundColor(context.getColor(R.color.gray));
-            button.setTextColor(context.getColor(R.color.darker_gray));
+            button.setTextColor(context.getColor(R.color.system_darker_gray));
         }
     }
 

@@ -10,14 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.wsapandroidapp.Adapters.MenuCategoryImageAdapter;
-import com.example.wsapandroidapp.SchedulesActivity;
-import com.example.wsapandroidapp.BudgetPlanActivity;
 import com.example.wsapandroidapp.DataModel.MenuCategoryImage;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
-import com.example.wsapandroidapp.GuestListActivity;
-import com.example.wsapandroidapp.PlannerSuppliersActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SuppliersChecklistActivity;
+import com.example.wsapandroidapp.SuppliersComparativeSheetActivity;
 import com.example.wsapandroidapp.WeddingTimelineActivity;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.WelcomeActivity;
@@ -69,7 +66,8 @@ public class PlannerFragment extends Fragment {
         plannerCategories = Arrays.asList(
                 new MenuCategoryImage(getString(R.string.wedding_tips), R.drawable.topics, new Intent(context, WeddingTipsActivity.class)),
                 new MenuCategoryImage(getString(R.string.wedding_timeline), R.drawable.wedding_timeline, new Intent(context, WeddingTimelineActivity.class)),
-                new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class))
+                new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
+                new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);

@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         isListening = true;
         applicationQuery.addValueEventListener(getApplicationValue());
 
+        /*for (int i = 0; i < 100; i++)
+            Log.d("TAG", Credentials.getUniqueId());*/
+
         bottomNavigationView.setBackground(null);
         if (navHostFragment != null)
             navController = navHostFragment.getNavController();

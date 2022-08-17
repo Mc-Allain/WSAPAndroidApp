@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.User;
+import com.example.wsapandroidapp.DataModel.UserRole;
 import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
@@ -151,6 +152,7 @@ public class WelcomeActivity extends AppCompatActivity {
             if (firebaseUser != null) {
                 User user = new User(firebaseUser.getUid(), Enums.GOOGLE_AUTH_METHOD);
                 user.setDisplayName(firebaseUser.getDisplayName());
+                user.setRole(new UserRole(false, false, false, false));
 
                 DatabaseReference userRef = firebaseDatabase.getReference("users").child(firebaseUser.getUid());
 

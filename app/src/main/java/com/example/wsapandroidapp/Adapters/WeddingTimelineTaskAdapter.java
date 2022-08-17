@@ -24,12 +24,15 @@ public class WeddingTimelineTaskAdapter extends RecyclerView.Adapter<WeddingTime
 
     private final List<UserWeddingTimelineTask> tasks;
 
+    private final boolean isMissed;
+
     private final  LayoutInflater layoutInflater;
 
     private final Context context;
 
-    public WeddingTimelineTaskAdapter(Context context, List<UserWeddingTimelineTask> tasks) {
+    public WeddingTimelineTaskAdapter(Context context, List<UserWeddingTimelineTask> tasks, boolean isMissed) {
         this.tasks = tasks;
+        this.isMissed = isMissed;
         this.layoutInflater = LayoutInflater.from(context);
 
         this.context = context;
@@ -58,14 +61,17 @@ public class WeddingTimelineTaskAdapter extends RecyclerView.Adapter<WeddingTime
 
         backgroundLayout.setBackgroundColor(context.getColor(R.color.white));
         tvLabel.setTextColor(context.getColor(R.color.primary));
-        imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.gray)));
         imgStatus.setImageResource(R.drawable.ic_baseline_watch_later_24);
+        imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.gray)));
+
+        if (isMissed)
+            imgStatus.setImageResource(R.drawable.ic_baseline_clear_24);
 
         if (isCompleted) {
             backgroundLayout.setBackgroundColor(context.getColor(R.color.primary));
             tvLabel.setTextColor(context.getColor(R.color.white));
-            imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
             imgStatus.setImageResource(R.drawable.ic_baseline_check_circle_24);
+            imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
         }
 
         cardView.setOnClickListener(view -> {

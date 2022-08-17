@@ -13,22 +13,6 @@ public class User {
         this.authMethod = authMethod;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
     public String getId() {
         return id;
     }
@@ -47,6 +31,22 @@ public class User {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void setRole(UserRole role) {
