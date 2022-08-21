@@ -106,11 +106,13 @@
                     <TextView
                         android:id="@+id/textView14"
                         style="@style/home_item_text_category"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="14dp"
+                        android:layout_marginEnd="10dp"
                         android:text="@string/upcoming_expos"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -119,7 +121,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/featuredTopicCard"
+                android:id="@+id/featuredWeddingTipCard"
                 style="@style/item_card"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -140,7 +142,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/imageView6">
 
                     <Button
-                        android:id="@+id/btnViewAllTopics"
+                        android:id="@+id/btnViewAllWeddingTips"
                         style="@style/opposite_small_button"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -156,7 +158,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
-                        android:scaleType="center"
+                        android:scaleType="centerCrop"
                         android:tint="@color/primary_75"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -172,7 +174,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="4dp"
                         android:maxWidth="120dp"
-                        android:text="@string/featured_topic_item_dummy"
+                        android:text="@string/coming_soon"
                         android:textAllCaps="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView16" />
@@ -180,11 +182,13 @@
                     <TextView
                         android:id="@+id/textView16"
                         style="@style/home_item_text_category"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="14dp"
-                        android:text="@string/featured_topic"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/featured_wedding_tip"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -201,7 +205,7 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintBottom_toTopOf="@+id/featuredTriviaCard"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/featuredTopicCard"
+                app:layout_constraintStart_toEndOf="@+id/featuredWeddingTipCard"
                 app:layout_constraintTop_toBottomOf="@+id/upcomingExposCard"
                 tools:ignore="DuplicateClickableBoundsCheck,TouchTargetSizeCheck">
 
@@ -230,7 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
-                        android:scaleType="center"
+                        android:scaleType="centerCrop"
                         android:tint="@color/primary_75"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -254,11 +258,13 @@
                     <TextView
                         android:id="@+id/textView18"
                         style="@style/home_item_text_category"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="14dp"
+                        android:layout_marginEnd="10dp"
                         android:text="@string/featured_supplier"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

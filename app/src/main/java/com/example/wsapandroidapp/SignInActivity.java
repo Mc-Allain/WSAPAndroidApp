@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -23,9 +24,12 @@ import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.Classes.Units;
 import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
+import com.example.wsapandroidapp.DialogClasses.ForgotPasswordFormDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,12 +50,13 @@ public class SignInActivity extends AppCompatActivity {
     ImageView imgBack;
     EditText etEmailAddress, etPassword;
     Button btnSignIn;
-    TextView tvSignUp, tvEmailAddressError, tvPasswordError;
+    TextView tvSignUp, tvEmailAddressError, tvPasswordError, tvForgotPassword;
 
     Context context;
 
     LoadingDialog loadingDialog;
     MessageDialog messageDialog;
+    ForgotPasswordFormDialog forgotPasswordFormDialog;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -81,11 +86,15 @@ public class SignInActivity extends AppCompatActivity {
         tvSignUp = findViewById(R.id.tvSignUp);
         tvEmailAddressError = findViewById(R.id.tvEmailAddressError);
         tvPasswordError = findViewById(R.id.tvPasswordError);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
         context = SignInActivity.this;
 
         loadingDialog = new LoadingDialog(context);
         messageDialog = new MessageDialog(context);
+        forgotPasswordFormDialog = new ForgotPasswordFormDialog(context);
+
+        forgotPasswordFormDialog.setDialogListener(this::checkEmailAddressRegistration);
 
         appStatusPromptDialog = new AppStatusPromptDialog(context);
         newVersionPromptDialog = new NewVersionPromptDialog(context);
@@ -177,6 +186,41 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        tvForgotPassword.setOnClickListener(view -> forgotPasswordFormDialog.showDialog());
+    }
+
+    private void checkEmailAddressRegistration(String emailAddress) {
+        loadingDialog.showDialog();
+
+        firebaseAuth.fetchSignInMethodsForEmail(emailAddress)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getSignInMethods() != null &&
+                                task.getResult().getSignInMethods().isEmpty()) {
+                            loadingDialog.dismissDialog();
+
+                            messageDialog.setMessageType(Enums.ERROR_MESSAGE);
+                            messageDialog.setMessage(getString(R.string.forgot_password_failed));
+                            messageDialog.showDialog();
+                        } else sendForgotPasswordEmailLink(emailAddress);
+                    } else if (task.getException() != null)
+                        signInFailed(task.getException().toString());
+                });
+    }
+    private void sendForgotPasswordEmailLink(String emailAddress) {
+        firebaseAuth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        loadingDialog.dismissDialog();
+                        forgotPasswordFormDialog.dismissDialog();
+
+                        messageDialog.setMessageType(Enums.SUCCESS_MESSAGE);
+                        messageDialog.setMessage(getString(R.string.forgot_password_success));
+                        messageDialog.showDialog();
+                    } else if (task.getException() != null)
+                        signInFailed(task.getException().toString());
+                });
     }
 
     private void defaultSignIn() {

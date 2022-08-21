@@ -260,9 +260,11 @@
                     style="@style/error_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
                     android:text="@string/required_input_error"
                     app:layout_constraintEnd_toEndOf="@+id/etThirdOption"
+                    app:layout_constraintStart_toEndOf="@+id/textView13"
                     app:layout_constraintTop_toBottomOf="@+id/etThirdOption" />
 
                 <TextView
@@ -298,7 +300,7 @@
                     android:layout_marginTop="4dp"
                     android:text="@string/required_input_error"
                     app:layout_constraintEnd_toEndOf="@+id/etFirstOption"
-                    app:layout_constraintStart_toEndOf="@+id/textView9"
+                    app:layout_constraintStart_toStartOf="@+id/etRemarks"
                     app:layout_constraintTop_toBottomOf="@+id/etRemarks" />
 
                 <ImageView

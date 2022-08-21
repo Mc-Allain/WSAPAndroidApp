@@ -328,11 +328,11 @@ public class SupplierComparativeSheetAdapter extends RecyclerView.Adapter {
                         context.getString(R.string.option_3), tvThirdOptionError, etThirdOption);
 
                 if (componentManager.isNoInputError() && adapterListener != null) {
-                    option1.setOption(firstOption[0]);
+                    option1.setOption(Credentials.fullTrim(firstOption[0]));
                     options.set(0, option1);
-                    option2.setOption(secondOption[0]);
+                    option2.setOption(Credentials.fullTrim(secondOption[0]));
                     options.set(1, option2);
-                    option3.setOption(thirdOption[0]);
+                    option3.setOption(Credentials.fullTrim(thirdOption[0]));
                     options.set(2, option3);
 
                     Map<String, SupplierOption> supplierOptionMap = new HashMap<>();
@@ -341,7 +341,7 @@ public class SupplierComparativeSheetAdapter extends RecyclerView.Adapter {
                         supplierOptionMap.put(supplierOption.getId(), supplierOption);
 
                     userSupplierComparativeSheetItem.setOptions(supplierOptionMap);
-                    userSupplierComparativeSheetItem.setRemarks(remarks[0]);
+                    userSupplierComparativeSheetItem.setRemarks(Credentials.fullTrim(remarks[0]));
 
                     adapterListener.onSubmit(userSupplierComparativeSheetItem);
 

@@ -2,7 +2,7 @@ package com.example.wsapandroidapp.DataModel;
 
 public class User {
 
-    private String id, authMethod, lastName, firstName, displayName;
+    private String id, authMethod, lastName, firstName, displayName, photoUrl;
     private UserRole role;
 
     public User() {
@@ -33,6 +33,10 @@ public class User {
         return displayName;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
     public UserRole getRole() {
         return role;
     }
@@ -47,6 +51,10 @@ public class User {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public void setRole(UserRole role) {

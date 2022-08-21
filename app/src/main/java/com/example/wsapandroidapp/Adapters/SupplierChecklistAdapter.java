@@ -269,10 +269,10 @@ public class SupplierChecklistAdapter extends RecyclerView.Adapter {
                     long parsedPhoneNumber = 0;
                     if (!Credentials.isEmpty(contactNumber[0])) parsedPhoneNumber = Long.parseLong(contactNumber[0]);
 
-                    supplierChecklist.setCompany(company[0]);
-                    supplierChecklist.setContactPerson(contactPerson[0]);
+                    supplierChecklist.setCompany(Credentials.fullTrim(company[0]));
+                    supplierChecklist.setContactPerson(Credentials.fullTrim(contactPerson[0]));
                     supplierChecklist.setContactNumber(parsedPhoneNumber);
-                    supplierChecklist.setEmailAddress(emailAddress[0]);
+                    supplierChecklist.setEmailAddress(Credentials.fullTrim(emailAddress[0]));
 
                     adapterListener.onSubmit(supplierChecklist);
 

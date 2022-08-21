@@ -82,6 +82,12 @@ public class WelcomeActivity extends AppCompatActivity {
         appStatusPromptDialog = new AppStatusPromptDialog(context);
         newVersionPromptDialog = new NewVersionPromptDialog(context);
 
+        if (getIntent().getBooleanExtra("isPasswordChanged", false)) {
+            messageDialog.setMessage(getString(R.string.update_record_success_msg, "the password."));
+            messageDialog.setMessageType(Enums.SUCCESS_MESSAGE);
+            messageDialog.showDialog();
+        }
+
         firebaseAuth = FirebaseAuth.getInstance();
 
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
@@ -150,8 +156,13 @@ public class WelcomeActivity extends AppCompatActivity {
         if (firebaseAuth != null) {
             firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
+                String photoUrl = "";
+                if (firebaseUser.getPhotoUrl() != null)
+                    photoUrl = firebaseUser.getPhotoUrl().toString();
+
                 User user = new User(firebaseUser.getUid(), Enums.GOOGLE_AUTH_METHOD);
                 user.setDisplayName(firebaseUser.getDisplayName());
+                user.setPhotoUrl(photoUrl);
                 user.setRole(new UserRole(false, false, false, false));
 
                 DatabaseReference userRef = firebaseDatabase.getReference("users").child(firebaseUser.getUid());

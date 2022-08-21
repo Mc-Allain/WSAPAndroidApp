@@ -21,7 +21,7 @@ import com.example.wsapandroidapp.R;
 import java.util.Collections;
 import java.util.List;
 
-public class UpdateEmailAddressFormDialog {
+public class ForgotPasswordFormDialog {
 
     private EditText etEmailAddress;
     private TextView tvEmailAddressError;
@@ -33,7 +33,7 @@ public class UpdateEmailAddressFormDialog {
 
     private String updateEmailAddress;
 
-    public UpdateEmailAddressFormDialog(Context context) {
+    public ForgotPasswordFormDialog(Context context) {
         this.context = context;
 
         createDialog();
@@ -47,7 +47,7 @@ public class UpdateEmailAddressFormDialog {
     private void setDialog() {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_update_email_address_form_layout);
+        dialog.setContentView(R.layout.dialog_forgot_password_form_layout);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
 
@@ -107,10 +107,6 @@ public class UpdateEmailAddressFormDialog {
 
     public void dismissDialog() {
         dialog.dismiss();
-
-        etEmailAddress.getText().clear();
-
-        componentManager.hideInputErrors();
     }
 
     private void checkEmailAddressError() {

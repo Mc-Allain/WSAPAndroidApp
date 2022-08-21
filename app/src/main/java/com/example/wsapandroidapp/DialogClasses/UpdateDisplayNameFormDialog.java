@@ -16,24 +16,25 @@ import android.widget.TextView;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Credentials;
 import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.User;
 import com.example.wsapandroidapp.R;
 
 import java.util.Collections;
 import java.util.List;
 
-public class UpdateEmailAddressFormDialog {
+public class UpdateDisplayNameFormDialog {
 
-    private EditText etEmailAddress;
-    private TextView tvEmailAddressError;
+    EditText etDisplayName;
+    TextView tvDisplayNameError;
 
     private final Context context;
     private Dialog dialog;
 
     private ComponentManager componentManager;
 
-    private String updateEmailAddress;
+    String displayName;
 
-    public UpdateEmailAddressFormDialog(Context context) {
+    public UpdateDisplayNameFormDialog(Context context) {
         this.context = context;
 
         createDialog();
@@ -47,35 +48,35 @@ public class UpdateEmailAddressFormDialog {
     private void setDialog() {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_update_email_address_form_layout);
+        dialog.setContentView(R.layout.dialog_update_display_name_form_layout);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
 
         ImageView imgClose = dialog.findViewById(R.id.imgClose);
-        etEmailAddress = dialog.findViewById(R.id.etEmailAddress);
-        tvEmailAddressError = dialog.findViewById(R.id.tvEmailAddressError);
-        Button btnUpdateEmail = dialog.findViewById(R.id.btnUpdateEmail);
+        etDisplayName = dialog.findViewById(R.id.etDisplayName);
+        tvDisplayNameError = dialog.findViewById(R.id.tvDisplayNameError);
+        Button btnUpdate = dialog.findViewById(R.id.btnUpdate);
 
         List<TextView> errorTextViewList =
-                Collections.singletonList(tvEmailAddressError);
+                Collections.singletonList(tvDisplayNameError);
         List<EditText> errorEditTextList =
-                Collections.singletonList(etEmailAddress);
+                Collections.singletonList(etDisplayName);
 
         componentManager = new ComponentManager(context);
         componentManager.initializeErrorComponents(errorTextViewList, errorEditTextList);
 
-        btnUpdateEmail.setOnClickListener(view -> {
+        btnUpdate.setOnClickListener(view -> {
             componentManager.hideInputErrors();
 
-            checkEmailAddressError();
+            checkPersonName(displayName, true, context.getString(R.string.last_name), tvDisplayNameError, etDisplayName);
 
             if (componentManager.isNoInputError() && dialogListener != null)
-                dialogListener.onUpdate(updateEmailAddress);
+                dialogListener.onUpdate(displayName);
         });
 
         imgClose.setOnClickListener(view -> dismissDialog());
 
-        etEmailAddress.addTextChangedListener(new TextWatcher() {
+        etDisplayName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -88,10 +89,10 @@ public class UpdateEmailAddressFormDialog {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                updateEmailAddress = editable != null ? editable.toString() : "";
+                displayName = editable != null ? editable.toString() : "";
 
-                componentManager.setInputRightDrawable(etEmailAddress, !Credentials.isEmpty(updateEmailAddress), Enums.CLEAR_TEXT);
-                checkEmailAddressError();
+                componentManager.setInputRightDrawable(etDisplayName, !Credentials.isEmpty(displayName), Enums.CLEAR_TEXT);
+                checkPersonName(displayName, true, context.getString(R.string.last_name), tvDisplayNameError, etDisplayName);
             }
         });
     }
@@ -108,28 +109,33 @@ public class UpdateEmailAddressFormDialog {
     public void dismissDialog() {
         dialog.dismiss();
 
-        etEmailAddress.getText().clear();
+        etDisplayName.getText().clear();
 
         componentManager.hideInputErrors();
     }
 
-    private void checkEmailAddressError() {
-        componentManager.hideInputError(tvEmailAddressError, etEmailAddress);
+    private void checkPersonName(String string, boolean isRequired, String fieldName,
+                                 TextView targetTextView, EditText targetEditText) {
+        componentManager.hideInputError(targetTextView, targetEditText);
 
-        if (Credentials.isEmpty(updateEmailAddress))
-            componentManager.showInputError(tvEmailAddressError,
-                    context.getString(R.string.required_input_error, context.getString(R.string.email_address)),
-                    etEmailAddress);
-        else if (!Credentials.isValidEmailAddress(updateEmailAddress))
-            componentManager.showInputError(tvEmailAddressError,
-                    context.getString(R.string.invalid_error, context.getString(R.string.email_address)),
-                    etEmailAddress);
+        if (Credentials.isEmpty(string) && isRequired)
+            componentManager.showInputError(targetTextView,
+                    context.getString(R.string.required_input_error, fieldName),
+                    targetEditText);
+        else if (!Credentials.isValidLength(string, Credentials.REQUIRED_PERSON_NAME_LENGTH, 0))
+            componentManager.showInputError(targetTextView,
+                    Credentials.getSentenceCase(context.getString(R.string.length_error, "", Credentials.REQUIRED_PERSON_NAME_LENGTH)),
+                    targetEditText);
+    }
+
+    public void setUser(User user) {
+        etDisplayName.setText(user.getLastName());
     }
 
     private DialogListener dialogListener;
 
     public interface DialogListener {
-        void onUpdate(String emailAddress);
+        void onUpdate(String displayName);
     }
 
     public void setDialogListener(DialogListener dialogListener) {

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.wsapandroidapp.Classes.Credentials;
 import com.example.wsapandroidapp.DataModel.User;
 import com.example.wsapandroidapp.R;
 
@@ -22,11 +24,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private final  LayoutInflater layoutInflater;
 
+    private Context context;
+
     private int userRoleIndex = 0;
 
     public UserAdapter(Context context, List<User> users) {
         this.users = users;
         this.layoutInflater = LayoutInflater.from(context);
+
+        this.context = context;
     }
 
     @NonNull
@@ -40,7 +46,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TextView tvDisplayName = holder.tvDisplayName,
             tvRole = holder.tvRole;
-        ImageView imgUpdate = holder.imgUpdate;
+        ImageView imgProfile = holder.imgProfile,
+                imgUpdate = holder.imgUpdate;
 
         User user = users.get(position);
         String role = "Non-Admin";
@@ -63,6 +70,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             roleIndex = 4;
         }
 
+        String photoUrl = user.getPhotoUrl();
+
+        if (!Credentials.isEmpty(photoUrl))
+            Glide.with(context).load(photoUrl).centerCrop().placeholder(R.drawable.ic_wsap).
+                    error(R.drawable.ic_wsap).into(imgProfile);
+        else imgProfile.setImageResource(R.drawable.ic_wsap);
+
         tvDisplayName.setText(user.getDisplayName());
         tvRole.setText(role);
 
@@ -84,7 +98,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         CardView cardView;
         TextView tvDisplayName, tvRole;
-        ImageView imgUpdate;
+        ImageView imgProfile, imgUpdate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,6 +106,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             cardView = itemView.findViewById(R.id.cardView);
             tvDisplayName = itemView.findViewById(R.id.tvDisplayName);
             tvRole = itemView.findViewById(R.id.tvRole);
+            imgProfile = itemView.findViewById(R.id.imgProfile);
             imgUpdate = itemView.findViewById(R.id.imgUpdate);
 
             setIsRecyclable(false);

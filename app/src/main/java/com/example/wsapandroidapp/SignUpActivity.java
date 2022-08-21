@@ -60,11 +60,11 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
 
-    ComponentManager componentManager;
+    ComponentManager componentManager, componentManager2;
 
     String signUpLastName, signUpFirstName, signUpEmailAddress, signUpPassword, signUpConfirmPassword;
 
-    boolean isPasswordShown = false;
+    boolean isPasswordShown = false, isConfirmPasswordShown = false;
 
     int tryCount;
 
@@ -117,6 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         componentManager = new ComponentManager(context);
         componentManager.initializeErrorComponents(errorTextViewList, errorEditTextList);
+        componentManager2 = new ComponentManager(context);
 
         imgBack.setOnClickListener(view -> onBackPressed());
 
@@ -226,8 +227,20 @@ public class SignUpActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 signUpConfirmPassword = editable != null ? editable.toString() : "";
 
+                if (!isConfirmPasswordShown)
+                    componentManager2.setInputRightDrawable(etConfirmPassword, !Credentials.isEmpty(signUpConfirmPassword), Enums.SHOW_PASSWORD);
+                else
+                    componentManager2.setInputRightDrawable(etConfirmPassword, !Credentials.isEmpty(signUpConfirmPassword), Enums.HIDE_PASSWORD);
                 checkPasswordError();
             }
+        });
+
+        componentManager2.setPasswordListener(isPasswordShownResult -> {
+            isConfirmPasswordShown = isPasswordShownResult;
+            if (!isConfirmPasswordShown)
+                componentManager2.setInputRightDrawable(etConfirmPassword, !Credentials.isEmpty(signUpConfirmPassword), Enums.SHOW_PASSWORD);
+            else
+                componentManager2.setInputRightDrawable(etConfirmPassword, !Credentials.isEmpty(signUpConfirmPassword), Enums.HIDE_PASSWORD);
         });
 
         etConfirmPassword.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -249,6 +262,62 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private ValueEventListener getApplicationValue() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    appStatusPromptDialog.dismissDialog();
+                    newVersionPromptDialog.dismissDialog();
+
+                    if (snapshot.exists()) {
+                        application = snapshot.getValue(Application.class);
+
+                        if (application != null) {
+                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
+                                appStatusPromptDialog.setTitle(application.getStatus());
+                                appStatusPromptDialog.showDialog();
+                            } else if (application.getCurrentVersion() < application.getLatestVersion()
+                                    && !application.isForDeveloper()) {
+                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
+                                newVersionPromptDialog.showDialog();
+                            }
+
+                            appStatusPromptDialog.setDialogListener(() -> {
+                                appStatusPromptDialog.dismissDialog();
+                                finish();
+                            });
+
+                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
+                                @Override
+                                public void onUpdate() {
+                                    Intent intent = new Intent("android.intent.action.VIEW",
+                                            Uri.parse(application.getDownloadLink()));
+                                    startActivity(intent);
+
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    newVersionPromptDialog.dismissDialog();
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
     }
 
     private void signUp() {
@@ -299,7 +368,7 @@ public class SignUpActivity extends AppCompatActivity {
                     etPassword);
         else if (!Credentials.isValidLength(signUpPassword, Credentials.REQUIRED_PASSWORD_LENGTH, 0))
             componentManager.showInputError(tvPasswordError,
-                    getString(R.string.length_error, "", Credentials.REQUIRED_PASSWORD_LENGTH),
+                    Credentials.getSentenceCase(getString(R.string.length_error, "", Credentials.REQUIRED_PASSWORD_LENGTH)),
                     etPassword);
         else if (!Credentials.isValidPassword(signUpPassword))
             componentManager.showInputError(tvPasswordError,
@@ -351,10 +420,15 @@ public class SignUpActivity extends AppCompatActivity {
         if (firebaseAuth != null) {
             firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
+                String photoUrl = "";
+                if (firebaseUser.getPhotoUrl() != null)
+                    photoUrl = firebaseUser.getPhotoUrl().toString();
+
                 User user = new User(firebaseUser.getUid(), Enums.DEFAULT_AUTH_METHOD);
                 user.setDisplayName(Credentials.fullTrim(signUpFirstName + " " + signUpLastName));
                 user.setFirstName(Credentials.fullTrim(signUpFirstName));
                 user.setLastName(Credentials.fullTrim(signUpLastName));
+                user.setPhotoUrl(photoUrl);
                 user.setRole(new UserRole(false, false, false, false));
 
                 DatabaseReference userRef = firebaseDatabase.getReference("users").child(firebaseUser.getUid());
@@ -450,62 +524,6 @@ public class SignUpActivity extends AppCompatActivity {
         editor.putLong(fields[1], targetDateTime);
         editor.putBoolean(fields[2], false);
         editor.apply();
-    }
-
-    private ValueEventListener getApplicationValue() {
-        return new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (isListening) {
-                    appStatusPromptDialog.dismissDialog();
-                    newVersionPromptDialog.dismissDialog();
-
-                    if (snapshot.exists()) {
-                        application = snapshot.getValue(Application.class);
-
-                        if (application != null) {
-                            if (!application.getStatus().equals(getString(R.string.live)) && !application.isForDeveloper()) {
-                                appStatusPromptDialog.setTitle(application.getStatus());
-                                appStatusPromptDialog.showDialog();
-                            } else if (application.getCurrentVersion() < application.getLatestVersion()
-                                    && !application.isForDeveloper()) {
-                                newVersionPromptDialog.setVersion(application.getCurrentVersion(), application.getLatestVersion());
-                                newVersionPromptDialog.showDialog();
-                            }
-
-                            appStatusPromptDialog.setDialogListener(() -> {
-                                appStatusPromptDialog.dismissDialog();
-                                finish();
-                            });
-
-                            newVersionPromptDialog.setDialogListener(new NewVersionPromptDialog.DialogListener() {
-                                @Override
-                                public void onUpdate() {
-                                    Intent intent = new Intent("android.intent.action.VIEW",
-                                            Uri.parse(application.getDownloadLink()));
-                                    startActivity(intent);
-
-                                    newVersionPromptDialog.dismissDialog();
-                                    finish();
-                                }
-
-                                @Override
-                                public void onCancel() {
-                                    newVersionPromptDialog.dismissDialog();
-                                    finish();
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
-            }
-        };
     }
 
     @Override

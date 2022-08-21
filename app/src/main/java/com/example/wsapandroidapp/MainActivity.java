@@ -8,10 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.wsapandroidapp.Classes.Credentials;
+import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.Application;
+import com.example.wsapandroidapp.DataModel.User;
 import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
+import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,11 +37,23 @@ public class MainActivity extends AppCompatActivity {
 
     Context context;
 
+    MessageDialog messageDialog;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+
+    Query userQuery;
+
+    boolean isListening;
+
+    User user;
+
+    String photoUrl;
+
     AppStatusPromptDialog appStatusPromptDialog;
     NewVersionPromptDialog newVersionPromptDialog;
     FirebaseDatabase firebaseDatabase;
     Query applicationQuery;
-    boolean isListening;
     Application application = new Application();
 
     @Override
@@ -49,22 +66,63 @@ public class MainActivity extends AppCompatActivity {
 
         context = MainActivity.this;
 
+        messageDialog = new MessageDialog(context);
         appStatusPromptDialog = new AppStatusPromptDialog(context);
         newVersionPromptDialog = new NewVersionPromptDialog(context);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null &&  firebaseUser.getPhotoUrl() != null)
+            photoUrl = firebaseUser.getPhotoUrl().toString();
+
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
+        userQuery = firebaseDatabase.getReference("users").orderByChild("id").equalTo(firebaseUser.getUid());
         applicationQuery = firebaseDatabase.getReference("application");
 
         isListening = true;
+        userQuery.addValueEventListener(getUser());
         applicationQuery.addValueEventListener(getApplicationValue());
 
-        /*for (int i = 0; i < 100; i++)
+        /*for (int i = 0; i < 300; i++)
             Log.d("TAG", Credentials.getUniqueId());*/
 
         bottomNavigationView.setBackground(null);
         if (navHostFragment != null)
             navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+    }
+
+    private void updatePhotoUrl() {
+        userQuery.getRef().child(firebaseUser.getUid()).child("photoUrl").setValue(photoUrl);
+    }
+
+    private ValueEventListener getUser() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+
+                    if (snapshot.exists())
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            user = dataSnapshot.getValue(User.class);
+                            break;
+                        }
+
+                    if (user != null && Credentials.isEmpty(user.getPhotoUrl()))
+                        updatePhotoUrl();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+
+                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "User"));
+                messageDialog.setMessageType(Enums.ERROR_MESSAGE);
+                messageDialog.showDialog();
+            }
+        };
     }
 
     private ValueEventListener getApplicationValue() {

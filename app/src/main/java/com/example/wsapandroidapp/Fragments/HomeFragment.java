@@ -44,9 +44,9 @@ public class HomeFragment extends Fragment {
 
     ConstraintLayout constraintLayout;
     ProgressBar pbLoading2;
-    CardView upcomingExposCard, featuredTopicCard, featuredSupplierCard, featuredTriviaCard;
+    CardView upcomingExposCard, featuredWeddingTipCard, featuredSupplierCard, featuredTriviaCard;
     TextView tvUpcomingExpo, tvFeaturedSupplier;
-    Button btnViewAllExpos, btnViewAllTopics, btnViewAllSuppliers, btnViewAllTrivia;
+    Button btnViewAllExpos, btnViewAllWeddingTips, btnViewAllSuppliers, btnViewAllTrivia;
 
     Context context;
 
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
         pbLoading2 = view.findViewById(R.id.pbLoading2);
 
         upcomingExposCard = view.findViewById(R.id.upcomingExposCard);
-        featuredTopicCard = view.findViewById(R.id.featuredTopicCard);
+        featuredWeddingTipCard = view.findViewById(R.id.featuredWeddingTipCard);
         featuredSupplierCard = view.findViewById(R.id.featuredSupplierCard);
         featuredTriviaCard = view.findViewById(R.id.featuredTriviaCard);
 
@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
         tvFeaturedSupplier = view.findViewById(R.id.tvFeaturedSupplier);
 
         btnViewAllExpos = view.findViewById(R.id.btnViewAllExpos);
-        btnViewAllTopics = view.findViewById(R.id.btnViewAllTopics);
+        btnViewAllWeddingTips = view.findViewById(R.id.btnViewAllWeddingTips);
         btnViewAllSuppliers = view.findViewById(R.id.btnViewAllSuppliers);
         btnViewAllTrivia = view.findViewById(R.id.btnViewAllTrivia);
 
@@ -103,6 +103,12 @@ public class HomeFragment extends Fragment {
         btnViewAllExpos.setOnClickListener(view1 -> {
             Intent intent = new Intent(context, ExposActivity.class);
             startActivity(intent);
+        });
+
+        btnViewAllWeddingTips.setOnClickListener(view1 -> {
+            messageDialog.setMessage(getString(R.string.coming_soon));
+            messageDialog.setMessageType(Enums.INFO_MESSAGE);
+            messageDialog.showDialog();
         });
 
         btnViewAllSuppliers.setOnClickListener(view1 -> {

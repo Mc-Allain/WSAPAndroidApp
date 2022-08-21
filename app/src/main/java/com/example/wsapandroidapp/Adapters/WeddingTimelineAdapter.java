@@ -97,6 +97,7 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
             tvTitle.setTextColor(context.getColor(R.color.black));
             imgStatus.setImageResource(R.drawable.ic_baseline_clear_24);
             imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
+            imgArrow.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
         }
 
         if (completed == total) {
@@ -104,6 +105,7 @@ public class WeddingTimelineAdapter extends RecyclerView.Adapter<WeddingTimeline
             tvTitle.setTextColor(context.getColor(R.color.primary));
             imgStatus.setImageResource(R.drawable.ic_baseline_check_circle_24);
             imgStatus.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.green)));
+            imgArrow.setImageTintList(ColorStateList.valueOf(context.getColor(R.color.primary)));
         }
 
         if (position == selectedPosition) {

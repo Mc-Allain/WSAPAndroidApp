@@ -61,7 +61,7 @@ public class PostSignUpActivity extends AppCompatActivity {
 
     int tryCount;
 
-    CountDownTimer countDownTimer;
+    CountDownTimer validationTimer;
 
     AppStatusPromptDialog appStatusPromptDialog;
     NewVersionPromptDialog newVersionPromptDialog;
@@ -87,18 +87,19 @@ public class PostSignUpActivity extends AppCompatActivity {
         context = PostSignUpActivity.this;
 
         getSharedPreference();
-        initCountDown();
 
         loadingDialog = new LoadingDialog(context);
         messageDialog = new MessageDialog(context);
         updateEmailAddressFormDialog = new UpdateEmailAddressFormDialog(context);
 
+        updateEmailAddressFormDialog.setDialogListener(this::updateEmailAddress);
+
         appStatusPromptDialog = new AppStatusPromptDialog(context);
         newVersionPromptDialog = new NewVersionPromptDialog(context);
 
-        updateEmailAddressFormDialog.setDialogListener(this::updateEmailAddress);
-
         componentManager = new ComponentManager(context);
+
+        initCountDown();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -156,11 +157,11 @@ public class PostSignUpActivity extends AppCompatActivity {
 
                         updateEmailAddressFormDialog.dismissDialog();
                     } else if (task.getException() != null)
-                        signUpFailed(task.getException().toString());
+                        updateEmailAddressFailed(task.getException().toString());
                 });
     }
 
-    private void signUpFailed(String errorMsg) {
+    private void updateEmailAddressFailed(String errorMsg) {
         loadingDialog.dismissDialog();
 
         String[] rawErrors = getResources().getStringArray(R.array.sign_up_raw_errors);
@@ -206,6 +207,8 @@ public class PostSignUpActivity extends AppCompatActivity {
         finishAffinity();
     }
 
+    CountDownTimer countDownTimer;
+
     private void initCountDown() {
         long duration = targetDateTime - new Date().getTime();
 
@@ -213,7 +216,7 @@ public class PostSignUpActivity extends AppCompatActivity {
             tvCountdown.setVisibility(View.VISIBLE);
             componentManager.setPrimaryButtonEnabled(btnResend, false);
 
-            new CountDownTimer(duration, (long) Units.secToMs(1)) {
+            countDownTimer = new CountDownTimer(duration, (long) Units.secToMs(1)) {
                 @Override
                 public void onTick(long l) {
                     long milliseconds = targetDateTime - new Date().getTime();
@@ -227,16 +230,18 @@ public class PostSignUpActivity extends AppCompatActivity {
                     tvCountdown.setVisibility(View.GONE);
                     componentManager.setPrimaryButtonEnabled(btnResend, true);
                 }
-            }.start();
+            };
+
+            countDownTimer.start();
         }
 
-        countDownTimer = new CountDownTimer((long) Units.hourToMs(24), (long) Units.secToMs(1)) {
+        validationTimer = new CountDownTimer((long) Units.hourToMs(24), (long) Units.secToMs(1)) {
             @Override
             public void onTick(long l) {
                 firebaseUser.reload();
 
                 if (firebaseUser.isEmailVerified()) {
-                    countDownTimer.cancel();
+                    validationTimer.cancel();
 
                     loadingDialog.showDialog();
 
@@ -245,6 +250,10 @@ public class PostSignUpActivity extends AppCompatActivity {
 
                     new Handler().postDelayed(() -> {
                         loadingDialog.dismissDialog();
+
+                        tvCountdown.setVisibility(View.GONE);
+                        componentManager.setPrimaryButtonEnabled(btnResend, true);
+                        countDownTimer.cancel();
 
                         Intent intent = new Intent(context, MainActivity.class);
                         startActivity(intent);
@@ -255,10 +264,10 @@ public class PostSignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                countDownTimer.start();
+                validationTimer.start();
             }
         };
-        countDownTimer.start();
+        validationTimer.start();
     }
 
     private void setSharedPreferences() {
@@ -360,6 +369,6 @@ public class PostSignUpActivity extends AppCompatActivity {
 
         super.onDestroy();
 
-        countDownTimer.cancel();
+        validationTimer.cancel();
     }
 }
