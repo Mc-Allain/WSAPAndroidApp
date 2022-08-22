@@ -424,7 +424,7 @@ public class WeddingTimelineActivity extends AppCompatActivity {
                 }
             };
             countDownTimer.start();
-        } else if (duration < 0) tvTimeLeft.setText(getString(R.string.congratulations));
+        } else if (duration < -Units.dayToMs(1)) tvTimeLeft.setText(getString(R.string.congratulations));
         else tvTimeLeft.setText(getString(R.string.wedding_day));
     }
 

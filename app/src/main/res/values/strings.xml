@@ -176,11 +176,14 @@
     <string name="non_admin_dashboard_access">You must be an admin to access this feature.</string>
 
     <string name="wedding_tips">Wedding Tips</string>
-    <string name="budget_plan">Budget Plan</string>
+    <string name="budget_allocation_plan">Budget Allocation Plan</string>
     <string name="wedding_timeline">Wedding Timeline Checklist</string>
     <string name="suppliers_checklist">Suppliers Checklist</string>
     <string name="suppliers_comparative_sheet">Suppliers Comparative Sheet</string>
-    <string name="checklist">Checklist</string>
+    <string name="todo_checklist">To-do Checklist</string>
+    <string name="notepad">Notepad</string>
+    <string name="alcohol_calculator">Alcohol Calculator</string>
+    <string name="wedding_dress_picker">Wedding Dress Picker</string>
     <string name="appointments">Appointments</string>
     <string name="schedules">Schedules</string>
     <string name="guests">Guests</string>

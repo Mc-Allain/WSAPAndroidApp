@@ -10,13 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.wsapandroidapp.Adapters.MenuCategoryImageAdapter;
+import com.example.wsapandroidapp.AlcoholCalculatorActivity;
+import com.example.wsapandroidapp.BudgetAllocationPlanActivity;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.MenuCategoryImage;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.NotepadActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SuppliersChecklistActivity;
 import com.example.wsapandroidapp.SuppliersComparativeSheetActivity;
+import com.example.wsapandroidapp.TodoChecklistActivity;
+import com.example.wsapandroidapp.WeddingDressPickerActivity;
 import com.example.wsapandroidapp.WeddingTimelineActivity;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.WelcomeActivity;
@@ -69,9 +74,14 @@ public class PlannerFragment extends Fragment {
 
         plannerCategories = Arrays.asList(
                 new MenuCategoryImage(getString(R.string.wedding_tips), R.drawable.topics, new Intent(context, WeddingTipsActivity.class)),
+                new MenuCategoryImage(getString(R.string.alcohol_calculator), R.drawable.alcohol, new Intent(context, AlcoholCalculatorActivity.class)),
+                new MenuCategoryImage(getString(R.string.wedding_dress_picker), R.drawable.wedding_dress, new Intent(context, WeddingDressPickerActivity.class)),
                 new MenuCategoryImage(getString(R.string.wedding_timeline), R.drawable.wedding_timeline, new Intent(context, WeddingTimelineActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
-                new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class))
+                new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
+                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.todo_checklist, new Intent(context, TodoChecklistActivity.class)),
+                new MenuCategoryImage(getString(R.string.budget_allocation_plan), R.drawable.budget_plan, new Intent(context, BudgetAllocationPlanActivity.class)),
+                new MenuCategoryImage(getString(R.string.notepad), R.drawable.notepad, new Intent(context, NotepadActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);
@@ -83,7 +93,7 @@ public class PlannerFragment extends Fragment {
             if (isAnonymous && !menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
                 confirmationDialog.setMessage(getString(R.string.non_anonymous_sign_in_prompt));
                 confirmationDialog.showDialog();
-            } else if (menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
+            } else if (isComingSoon(menuCategoryImage)) {
                 messageDialog.setMessage(getString(R.string.coming_soon));
                 messageDialog.setMessageType(Enums.INFO_MESSAGE);
                 messageDialog.showDialog();
@@ -91,6 +101,14 @@ public class PlannerFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private boolean isComingSoon(MenuCategoryImage menuCategoryImage) {
+        return menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips)) ||
+                menuCategoryImage.getCategory().equals(getString(R.string.todo_checklist)) ||
+                menuCategoryImage.getCategory().equals(getString(R.string.notepad)) ||
+                menuCategoryImage.getCategory().equals(getString(R.string.alcohol_calculator)) ||
+                menuCategoryImage.getCategory().equals(getString(R.string.wedding_dress_picker));
     }
 
     private void signOut() {
